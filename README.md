@@ -47,7 +47,7 @@ Thank you kindly!
 extern crate human_panic;
 
 human_panic::catch_unwind(|| {
-  panic!("oh no!");
+  panic!("something went wrong");
 });
 ```
 
