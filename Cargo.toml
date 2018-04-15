@@ -9,14 +9,6 @@ description = "Panic messages for humans"
 authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
 readme = "README.md"
 
-[dependencies]
-unindent = "0.1.2"
-failure = "0.1.1"
-console = "0.6.1"
-
-[dev-dependencies]
-clippy = "0.0"
-
 [features]
 nightly = []
 
