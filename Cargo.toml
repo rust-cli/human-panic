@@ -16,3 +16,9 @@ console = "0.6.1"
 
 [dev-dependencies]
 clippy = "0.0"
+
+[features]
+nightly = []
+
+[package.metadata.docs.rs]
+features = ["nightly"]

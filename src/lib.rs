@@ -1,9 +1,6 @@
-#![feature(external_doc)]
-#![doc(include = "../README.md")]
-#![deny(missing_docs)]
-#![cfg_attr(test, deny(warnings))]
-#![cfg_attr(test, feature(plugin))]
-#![cfg_attr(test, plugin(clippy))]
+#![cfg_attr(feature = "nightly", deny(missing_docs))]
+#![cfg_attr(feature = "nightly", feature(external_doc))]
+#![cfg_attr(feature = "nightly", doc(include = "../README.md"))]
 
 extern crate console;
 extern crate failure;
