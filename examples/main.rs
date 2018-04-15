@@ -1,8 +1,9 @@
 extern crate human_panic;
 
-use human_panic::set_hook;
+use human_panic::catch_unwind;
 
 fn main() {
-  set_hook();
-  panic!("oops");
+  catch_unwind(|| {
+    panic!("oops");
+  });
 }
