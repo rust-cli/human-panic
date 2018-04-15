@@ -32,12 +32,18 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```txt
 Well, this is embarrasing.
 
-Example had a problem and crashed. To help us diagnose the problem you can send
-us a crash report.
+human-panic had a problem and crashed. To help us diagnose the problem you can
+send us a crash report.
 
-Submit an issue to "github.com/example/main" or email "crash@example-corp.com"
-with the subject "Example Crash Report". Please include the report located at
-"/tmp/example/panic-2018-04-20.log" as an attachment.
+We have generated a report file at "<reports not generated yet>". Submit an
+issue or email with the subject of "human-panic Crash Report" and include the
+report as an attachment.
+
+- Homepage: https://github.com/yoshuawuyts/human-panic
+- Authors: Yoshua Wuyts <yoshuawuyts@gmail.com>
+
+We take privacy seriously, and do not perform any automated error collection. In
+order to improve the software, we rely on people to submit reports.
 
 Thank you kindly!
 ```
