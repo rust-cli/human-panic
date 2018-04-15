@@ -4,8 +4,8 @@
 
 extern crate termcolor;
 
-use std::panic;
 use std::error::Error;
+use std::panic;
 
 /// Catch any error handlers that occur, and
 // Cargo env vars available:
@@ -24,8 +24,8 @@ pub fn catch_unwind<F: FnOnce() -> Result<(), Box<Error>>>(f: F) {
   }
 }
 
-use std::io::{Write, Result as IoResult};
-  use termcolor::{Color, ColorChoice, ColorSpec, BufferWriter, WriteColor};
+use std::io::{Result as IoResult, Write};
+use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 fn print_msg() -> IoResult<()> {
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
