@@ -2,6 +2,8 @@
 #![cfg_attr(feature = "nightly", feature(external_doc))]
 #![cfg_attr(feature = "nightly", doc(include = "../README.md"))]
 
+extern crate termcolor;
+
 use std::panic;
 use std::error::Error;
 
@@ -21,21 +23,30 @@ pub fn catch_unwind<F: FnOnce() -> Result<(), Box<Error>>>(f: F) {
 }
 
 fn print_msg() {
+  use std::io::Write;
+  use termcolor::{Color, ColorChoice, ColorSpec, BufferWriter, WriteColor};
+
+  let stderr = BufferWriter::stderr(ColorChoice::Auto);
+  let mut buffer = stderr.buffer();
+  let _ = buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)));
+
   let _version = env!("CARGO_PKG_VERSION");
   let name = env!("CARGO_PKG_NAME");
   let authors = env!("CARGO_PKG_AUTHORS");
   let homepage = env!("CARGO_PKG_HOMEPAGE");
 
-  eprintln!("Well, this is embarrasing.\n");
-  eprintln!("{} had a problem and crashed. To help us diagnose the problem you can send us a crash report.\n", name);
-  eprintln!("We have generated a report file at \"<reports not generated yet>\". Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.\n", name);
+  let _ = writeln!(&mut buffer, "Well, this is embarrasing.\n");
+  let _ = writeln!(&mut buffer, "{} had a problem and crashed. To help us diagnose the problem you can send us a crash report.\n", name);
+  let _ = writeln!(&mut buffer, "We have generated a report file at \"<reports not generated yet>\". Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.\n", name);
 
   if !homepage.is_empty() {
-    eprintln!("- Homepage: {}", homepage);
+    let _ = writeln!(&mut buffer, "- Homepage: {}", homepage);
   }
   if !authors.is_empty() {
-    eprintln!("- Authors: {}", authors);
+    let _ = writeln!(&mut buffer, "- Authors: {}", authors);
   }
-  eprintln!("\nWe take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.\n");
-  eprintln!("Thank you kindly!");
+  let _ = writeln!(&mut buffer, "\nWe take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.\n");
+  let _ = writeln!(&mut buffer, "Thank you kindly!");
+
+  stderr.print(&buffer).unwrap();
 }

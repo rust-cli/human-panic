@@ -9,6 +9,9 @@ description = "Panic messages for humans"
 authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
 readme = "README.md"
 
+[dependencies]
+termcolor = "0.3"
+
 [features]
 nightly = []
 
