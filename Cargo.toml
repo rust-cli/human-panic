@@ -9,10 +9,18 @@ description = "Panic messages for humans"
 authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
 readme = "README.md"
 
-[dependencies]
-unindent = "0.1.2"
-failure = "0.1.1"
-console = "0.6.1"
+[package.metadata.docs.rs]
+features = ["nightly"]
 
-[dev-dependencies]
-clippy = "0.0"
+[dependencies]
+termcolor = "0.3"
+tempdir = "0.3.7"
+uuid = { version = "0.6", features = ["v4"] }
+serde_derive = "1.0.38"
+toml = "0.4.6"
+serde = "1.0.38"
+failure = "0.1.1"
+os_type = "2.0.0"
+
+[features]
+nightly = []
