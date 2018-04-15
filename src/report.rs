@@ -21,12 +21,13 @@ pub struct Report {
   name: String,
   operating_system: String,
   crate_version: String,
+  explanation: String,
   method: Method,
 }
 
 impl Report {
   /// Create a new instance.
-  pub fn new(method: Method) -> Self {
+  pub fn new(method: Method, explanation: String) -> Self {
     let operating_system;
     if cfg!(windows) {
       operating_system = "windows".to_string();
@@ -40,6 +41,7 @@ impl Report {
       name: env!("CARGO_PKG_NAME").to_string(),
       operating_system,
       method,
+      explanation,
     }
   }
 

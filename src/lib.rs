@@ -18,16 +18,47 @@ use std::panic;
 // Cargo env vars available:
 // https://doc.rust-lang.org/cargo/reference/environment-variables.html#environment-variables-cargo-sets-for-crates
 pub fn catch_unwind<F: FnOnce() -> Result<(), Error>>(f: F) {
-  panic::set_hook(Box::new(|_panic_info| {
-    let report = Report::new(Method::Panic);
-    let file_path = report.persist().unwrap();
-    print_msg(file_path).unwrap();
+  panic::set_hook(Box::new(|panic_info| {
+    let mut expl = String::new();
+
+    let payload = panic_info.payload().downcast_ref::<&str>();
+    if let Some(payload) = payload {
+      expl.push_str(&format!("Cause: {}.", &payload));
+    }
+
+    match panic_info.location() {
+      Some(location) => expl.push_str(&format!(
+        "Panic occurred in file '{}' at line {}\n",
+        location.file(),
+        location.line()
+      )),
+      None => expl.push_str("Panic location uknown.\n"),
+    }
+
+    let report = Report::new(Method::Panic, expl);
+    let file_path = report
+      .persist()
+      .expect("human-panic: writing report failed");
+    print_msg(file_path)
+      .expect("human-panic: printing error message to console failed");
   }));
 
-  if let Err(_) = f() {
-    let report = Report::new(Method::Err);
-    let file_path = report.persist().unwrap();
-    print_msg(file_path).unwrap();
+  if let Err(err) = f() {
+    let mut expl = String::new();
+    expl.push_str(&format!(
+      "Cause: {}\n\n",
+      format!("{}", err.cause())
+    ));
+    expl.push_str(&format!(
+      "Backtrace: {}\n\n",
+      format!("{}", err.backtrace())
+    ));
+    let report = Report::new(Method::Err, expl);
+    let file_path = report
+      .persist()
+      .expect("human-panic: writing report failed");
+    print_msg(file_path)
+      .expect("human-panic: printing error message to console failed");
   }
 }
 
