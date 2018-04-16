@@ -4,7 +4,6 @@
 
 extern crate termcolor;
 
-use std::error::Error;
 use std::panic::PanicInfo;
 use std::io::{Result as IoResult, Write};
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
