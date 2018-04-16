@@ -1,11 +1,10 @@
-extern crate human_panic;
 #[macro_use]
 extern crate failure;
 
-use human_panic::catch_unwind;
+#[macro_use]
+extern crate human_panic;
 
 fn main() {
-  catch_unwind(|| {
-    bail!("Ooops");
-  });
+  setup_panic!();
+  bail!("Ooops");
 }
