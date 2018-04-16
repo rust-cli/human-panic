@@ -18,10 +18,10 @@ use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
 pub struct Metadata<'a> {
-  version: &'a str,
-  name: &'a str,
-  authors: &'a str,
-  homepage: &'a str,
+  pub version: &'a str,
+  pub name: &'a str,
+  pub authors: &'a str,
+  pub homepage: &'a str,
 }
 
 /// Setup the human panic hook that will make all panics
@@ -34,18 +34,17 @@ macro_rules! setup_panic {
     use std::panic::{self, PanicInfo};
 
     let meta = Metadata {
-    version = env!("CARGO_PKG_VERSION"),
-    name = env!("CARGO_PKG_NAME"),
-    authors = env!("CARGO_PKG_AUTHORS"),
-    homepage = env!("CARGO_PKG_HOMEPAGE"),
+      version: env!("CARGO_PKG_VERSION"),
+      name: env!("CARGO_PKG_NAME"),
+      authors: env!("CARGO_PKG_AUTHORS"),
+      homepage: env!("CARGO_PKG_HOMEPAGE"),
     };
-
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path =
         handle_dump(info).expect("human-panic: dumping logs to disk failed");
 
-      print_msg(file_path, meta)
+      print_msg(file_path, &meta)
         .expect("human-panic: printing error message to console failed");
     }));
   };
@@ -87,7 +86,7 @@ pub fn handle_dump(panic_info: &PanicInfo) -> Result<String, FailError> {
 
   let payload = panic_info.payload().downcast_ref::<&str>();
   if let Some(payload) = payload {
-    expl.push_str(&format!("Cause: {}.", &payload));
+    expl.push_str(&format!("Cause: {}. ", &payload));
   }
 
   match panic_info.location() {
