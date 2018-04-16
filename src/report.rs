@@ -13,7 +13,6 @@ use std::{env, fs::File, io::Write};
 #[derive(Debug, Serialize)]
 pub enum Method {
   Panic,
-  Err,
 }
 
 #[derive(Debug, Serialize)]
