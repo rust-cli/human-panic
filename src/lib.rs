@@ -18,9 +18,8 @@ pub fn catch_unwind<F: FnOnce() -> Result<(), Box<Error>>>(f: F) {
     }
   }));
 
-  match f() {
-    Ok(_) => {}
-    _ => { /* TODO: create log report. */ }
+  if let Err(_e) = f() {
+    // TODO: create log report.
   }
 }
 
