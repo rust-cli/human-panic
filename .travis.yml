@@ -1,11 +1,23 @@
 language: rust
 rust:
-  - nightly
-
-before_script: |
-  rustup component add rustfmt-preview
+  - stable
+  - beta
 script: |
-  cargo fmt -- --write-mode=diff &&
   cargo build --verbose &&
   cargo test  --verbose
+matrix: # additional tests
+  include:
+  - rust: nightly-2018-04-15
+    env: CLIPPY_VERS="0.0.194"
+    before_script: |
+      [[ "$(cargo +nightly-2018-04-15 clippy --version)" != "$CLIPPY_VERS" ]] && \
+      cargo +nightly-2018-04-15 install clippy --vers "$CLIPPY_VERS" --force || true
+    script: |
+      cargo +nightly-2018-04-15 clippy -- -D warnings
+  - rust: 1.25.0  # `stable`: Locking down for consistent behavior
+    env: RUSTFMT=yes_please
+    install:
+    - rustup component add rustfmt-preview
+    script:
+    - cargo fmt -- --write-mode=diff
 cache: cargo
