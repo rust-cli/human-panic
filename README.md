@@ -32,37 +32,30 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```txt
 Well, this is embarrasing.
 
-human-panic had a problem and crashed. To help us diagnose the problem you can
-send us a crash report.
+human-panic had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
-We have generated a report file at "<reports not generated yet>". Submit an
-issue or email with the subject of "human-panic Crash Report" and include the
-report as an attachment.
+We have generated a report file at "/var/folders/zw/bpfvmq390lv2c6gn_6byyv0w0000gn/T/report-8351cad6-d2b5-4fe8-accd-1fcbf4538792.toml". Submit an issue or email with the subject of "human-panic Crash Report" and include the report as an attachment.
 
 - Homepage: https://github.com/yoshuawuyts/human-panic
 - Authors: Yoshua Wuyts <yoshuawuyts@gmail.com>
 
-We take privacy seriously, and do not perform any automated error collection. In
-order to improve the software, we rely on people to submit reports.
+We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
 
 Thank you kindly!
 ```
 
 ## Usage
 ```rust
+#[macro_use]
 extern crate human_panic;
 
-human_panic::catch_unwind(|| {
-  panic!("something went wrong");
-});
-```
+fn main() {
+   setup_panic!();
 
-## Notes
-Because we rely on `std::panic::catch_unwind`, we inherit some of the same
-limitations. More specifically: [we can only catch unwinding panics, not
-aborts](https://doc.rust-lang.org/std/panic/fn.catch_unwind.html#notes). This
-should be alright for most cases, but it's good to be aware of what the
-limitations are.
+   println!("A normal log message");
+   panic!("OMG EVERYTHING IS ON FIRE!!!")
+}
+```
 
 ## Installation
 ```sh
