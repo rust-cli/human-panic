@@ -62,7 +62,7 @@ pub fn print_msg<P: AsRef<Path>>(
   let mut buffer = stderr.buffer();
   buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
 
-  writeln!(&mut buffer, "Well, this is embarrasing.\n")?;
+  writeln!(&mut buffer, "Well, this is embarrassing.\n")?;
   writeln!(
     &mut buffer,
     "{} had a problem and crashed. To help us diagnose the \
@@ -111,7 +111,7 @@ pub fn handle_dump(panic_info: &PanicInfo) -> Result<PathBuf, FailError> {
       location.file(),
       location.line()
     )),
-    None => expl.push_str("Panic location uknown.\n"),
+    None => expl.push_str("Panic location unknown.\n"),
   }
 
   let report = Report::new(Method::Panic, expl);
