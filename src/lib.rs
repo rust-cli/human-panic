@@ -13,8 +13,8 @@ use report::{Method, Report};
 
 use failure::Error as FailError;
 use std::io::{Result as IoResult, Write};
-use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
+use std::panic::PanicInfo;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
@@ -55,12 +55,8 @@ pub fn print_msg<P: AsRef<Path>>(
   file_path: P,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage) = (
-    meta.version,
-    meta.name,
-    meta.authors,
-    meta.homepage,
-  );
+  let (_version, name, authors, homepage) =
+    (meta.version, meta.name, meta.authors, meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
@@ -101,10 +97,7 @@ pub fn print_msg<P: AsRef<Path>>(
 }
 
 /// Utility function which will handle dumping information to disk
-pub fn handle_dump(
-  meta: &Metadata,
-  panic_info: &PanicInfo,
-) -> Result<PathBuf, FailError> {
+pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Result<PathBuf, FailError> {
   let mut expl = String::new();
 
   let payload = panic_info.payload().downcast_ref::<&str>();
