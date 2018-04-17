@@ -26,9 +26,9 @@ pub struct Report {
 
 impl Report {
   /// Create a new instance.
-  pub fn new<S: Into<String>>(
-    name: S,
-    version: S,
+  pub fn new(
+    name: &str,
+    version: &str,
     method: Method,
     explanation: String,
   ) -> Self {
@@ -40,8 +40,8 @@ impl Report {
     };
 
     Self {
-      crate_version: version.into(),
-      name: name.into(),
+      crate_version: version.to_string(),
+      name: name.to_string(),
       operating_system,
       method,
       explanation,

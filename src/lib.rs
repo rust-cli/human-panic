@@ -121,6 +121,6 @@ pub fn handle_dump(
     None => expl.push_str("Panic location uknown.\n"),
   }
 
-  let report = Report::new(meta.name, meta.version, Method::Panic, expl);
+  let report = Report::new(&meta.name, &meta.version, Method::Panic, expl);
   report.persist()
 }
