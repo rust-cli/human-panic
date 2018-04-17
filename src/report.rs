@@ -26,7 +26,12 @@ pub struct Report {
 
 impl Report {
   /// Create a new instance.
-  pub fn new<S: Into<String>>(name: S, version: S, method: Method, explanation: String) -> Self {
+  pub fn new<S: Into<String>>(
+    name: S,
+    version: S,
+    method: Method,
+    explanation: String,
+  ) -> Self {
     let operating_system = if cfg!(windows) {
       "windows".to_string()
     } else {
