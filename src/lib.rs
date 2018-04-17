@@ -99,5 +99,5 @@ pub fn handle_dump(panic_info: &PanicInfo) -> Result<String, FailError> {
   }
 
   let report = Report::new(Method::Panic, expl);
-  return report.persist();
+  report.persist()
 }
