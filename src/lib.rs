@@ -13,7 +13,7 @@ use report::{Method, Report};
 
 use failure::Error as FailError;
 use std::io::{Result as IoResult, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::panic::PanicInfo;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
@@ -51,7 +51,10 @@ macro_rules! setup_panic {
 }
 
 /// Utility function that prints a message to our human users
-pub fn print_msg(file_path: PathBuf, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg<P: AsRef<Path>>(
+  file_path: P,
+  meta: &Metadata,
+) -> IoResult<()> {
   let (_version, name, authors, homepage) =
     (meta.version, meta.name, meta.authors, meta.homepage);
 
@@ -71,7 +74,7 @@ pub fn print_msg(file_path: PathBuf, meta: &Metadata) -> IoResult<()> {
     "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
-    file_path.display(),
+    file_path.as_ref().display(),
     name
   )?;
 
