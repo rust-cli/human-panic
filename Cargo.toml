@@ -1,12 +1,14 @@
 [package]
 name = "human-panic"
-version = "0.1.0"
+version = "0.2.0"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/yoshuawuyts/human-panic"
 homepage = "https://github.com/yoshuawuyts/human-panic"
 documentation = "https://docs.rs/human-panic"
 description = "Panic messages for humans"
-authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>"]
+authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>", 
+           "Pascal Hertleif <killercup@gmail.com>",
+           "Katharina Fey <kookie@spacekookie.de>"]
 readme = "README.md"
 
 [package.metadata.docs.rs]
