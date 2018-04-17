@@ -7,7 +7,7 @@ extern crate uuid;
 
 use self::failure::Error;
 use self::uuid::Uuid;
-use std::{env, fs::File, io::Write};
+use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
 #[derive(Debug, Serialize)]
@@ -44,14 +44,15 @@ impl Report {
   }
 
   /// Write a file to disk.
-  pub fn persist(&self) -> Result<String, Error> {
+  pub fn persist(&self) -> Result<PathBuf, Error> {
     let uuid = Uuid::new_v4().hyphenated().to_string();
     let tmp_dir = env::temp_dir();
     let tmp_dir = match tmp_dir.to_str() {
       Some(dir) => dir,
       None => bail!("Could not create a tmp directory for a report."),
     };
-    let file_path = format!("{}/report-{}.toml", tmp_dir, &uuid);
+    let file_name = format!("report-{}.toml", &uuid);
+    let file_path = Path::new(tmp_dir).join(file_name);
     let mut file = File::create(&file_path)?;
     let toml = toml::to_string(&self)?;
     file.write_all(toml.as_bytes())?;
