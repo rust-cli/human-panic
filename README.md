@@ -23,12 +23,14 @@ people might get frustrated. And making it easier to figure out what might be
 causing bugs.
 
 ### Default Output
+
 ```txt
 thread 'main' panicked at 'oops', examples/main.rs:2:3
 note: Run with `RUST_BACKTRACE=1` for a backtrace.
 ```
 
 ### Human-Panic Output
+
 ```txt
 Well, this is embarrasing.
 
@@ -45,7 +47,8 @@ Thank you kindly!
 ```
 
 ## Usage
-```rust
+
+```rust no_run
 #[macro_use]
 extern crate human_panic;
 
@@ -58,6 +61,7 @@ fn main() {
 ```
 
 ## Installation
+
 ```sh
 $ cargo add human-panic
 ```
