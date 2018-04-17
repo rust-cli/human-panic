@@ -51,20 +51,27 @@ macro_rules! setup_panic {
 
 /// Utility function that prints a message to our human users
 pub fn print_msg(file_path: &str, meta: &Metadata) -> IoResult<()> {
-  let (_version, name, authors, homepage) = (
-    meta.version,
-    meta.name,
-    meta.authors,
-    meta.homepage,
-  );
+  let (_version, name, authors, homepage) =
+    (meta.version, meta.name, meta.authors, meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
   buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
 
   writeln!(&mut buffer, "Well, this is embarrasing.\n")?;
-  writeln!(&mut buffer, "{} had a problem and crashed. To help us diagnose the problem you can send us a crash report.\n", name)?;
-  writeln!(&mut buffer, "We have generated a report file at \"{}\". Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.\n", &file_path, name)?;
+  writeln!(
+    &mut buffer,
+    "{} had a problem and crashed. To help us diagnose the \
+     problem you can send us a crash report.\n",
+    name
+  )?;
+  writeln!(
+    &mut buffer,
+    "We have generated a report file at \"{}\". Submit an \
+     issue or email with the subject of \"{} Crash Report\" and include the \
+     report as an attachment.\n",
+    &file_path, name
+  )?;
 
   if !homepage.is_empty() {
     writeln!(&mut buffer, "- Homepage: {}", homepage)?;
@@ -72,7 +79,12 @@ pub fn print_msg(file_path: &str, meta: &Metadata) -> IoResult<()> {
   if !authors.is_empty() {
     writeln!(&mut buffer, "- Authors: {}", authors)?;
   }
-  writeln!(&mut buffer, "\nWe take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.\n")?;
+  writeln!(
+    &mut buffer,
+    "\nWe take privacy seriously, and do not perform any \
+     automated error collection. In order to improve the software, we rely on \
+     people to submit reports.\n"
+  )?;
   writeln!(&mut buffer, "Thank you kindly!")?;
 
   stderr.print(&buffer).unwrap();
