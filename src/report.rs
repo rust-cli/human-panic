@@ -26,7 +26,7 @@ pub struct Report {
 
 impl Report {
   /// Create a new instance.
-  pub fn new(method: Method, explanation: String) -> Self {
+  pub fn new<S: Into<String>>(name: S, version: S, method: Method, explanation: String) -> Self {
     let operating_system = if cfg!(windows) {
       "windows".to_string()
     } else {
@@ -35,8 +35,8 @@ impl Report {
     };
 
     Self {
-      crate_version: env!("CARGO_PKG_VERSION").to_string(),
-      name: env!("CARGO_PKG_NAME").to_string(),
+      crate_version: version.into(),
+      name: name.into(),
       operating_system,
       method,
       explanation,
