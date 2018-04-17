@@ -55,12 +55,8 @@ pub fn print_msg<P: AsRef<Path>>(
   file_path: P,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage) = (
-    meta.version,
-    meta.name,
-    meta.authors,
-    meta.homepage,
-  );
+  let (_version, name, authors, homepage) =
+    (meta.version, meta.name, meta.authors, meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
