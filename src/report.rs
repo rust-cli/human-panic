@@ -47,15 +47,11 @@ impl Report {
   /// Write a file to disk.
   pub fn persist(&self) -> Result<String, Error> {
     let uuid = Uuid::new_v4().hyphenated().to_string();
-    let tmp_dir = env::temp_dir();
-    let tmp_dir = match tmp_dir.to_str() {
-      Some(dir) => dir,
-      None => bail!("Could not create a tmp directory for a report."),
-    };
-    let file_path = format!("{}/report-{}.toml", tmp_dir, &uuid);
+    let mut file_path = env::temp_dir();
+    file_path.push(format!("report-{}.toml", &uuid));
     let mut file = File::create(&file_path)?;
     let toml = toml::to_string(&self)?;
     file.write_all(toml.as_bytes())?;
-    Ok(file_path)
+    Ok(format!("{}", file_path.display()))
   }
 }
