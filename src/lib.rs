@@ -13,6 +13,7 @@ use report::{Method, Report};
 
 use failure::Error as FailError;
 use std::io::{Result as IoResult, Write};
+use std::path::PathBuf;
 use std::panic::PanicInfo;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
@@ -51,7 +52,7 @@ macro_rules! setup_panic {
 }
 
 /// Utility function that prints a message to our human users
-pub fn print_msg(file_path: String, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg(file_path: PathBuf, meta: &Metadata) -> IoResult<()> {
   let (_version, name, authors, homepage) = (
     meta.version,
     meta.name,
@@ -65,7 +66,7 @@ pub fn print_msg(file_path: String, meta: &Metadata) -> IoResult<()> {
 
   writeln!(&mut buffer, "Well, this is embarrasing.\n")?;
   writeln!(&mut buffer, "{} had a problem and crashed. To help us diagnose the problem you can send us a crash report.\n", name)?;
-  writeln!(&mut buffer, "We have generated a report file at \"{}\". Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.\n", &file_path, name)?;
+  writeln!(&mut buffer, "We have generated a report file at \"{}\". Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.\n", file_path.display(), name)?;
 
   if !homepage.is_empty() {
     writeln!(&mut buffer, "- Homepage: {}", homepage)?;
@@ -81,7 +82,7 @@ pub fn print_msg(file_path: String, meta: &Metadata) -> IoResult<()> {
 }
 
 /// Utility function which will handle dumping information to disk
-pub fn handle_dump(panic_info: &PanicInfo) -> Result<String, FailError> {
+pub fn handle_dump(panic_info: &PanicInfo) -> Result<PathBuf, FailError> {
   let mut expl = String::new();
 
   let payload = panic_info.payload().downcast_ref::<&str>();
