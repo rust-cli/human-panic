@@ -30,7 +30,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 
 ### Human-Panic Output
 ```txt
-Well, this is embarrasing.
+Well, this is embarrassing.
 
 human-panic had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
