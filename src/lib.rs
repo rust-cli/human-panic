@@ -18,11 +18,11 @@ use std::panic::PanicInfo;
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
-pub struct Metadata<'a> {
-  pub version: &'a str,
-  pub name: &'a str,
-  pub authors: &'a str,
-  pub homepage: &'a str,
+pub struct Metadata {
+  pub version: &'static str,
+  pub name: &'static str,
+  pub authors: &'static str,
+  pub homepage: &'static str,
 }
 
 /// Setup the human panic hook that will make all panics
