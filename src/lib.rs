@@ -19,9 +19,13 @@ use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
 pub struct Metadata<'a> {
+  /// The crate version
   pub version: &'a str,
+  /// The crate name
   pub name: &'a str,
+  /// The list of authors of the crate
   pub authors: &'a str,
+  /// The URL of the crate's website
   pub homepage: &'a str,
 }
 
