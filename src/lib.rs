@@ -30,7 +30,6 @@ pub struct Metadata<'a> {
 macro_rules! setup_panic {
   () => {
     use human_panic::*;
-    use std::env;
     use std::panic::{self, PanicInfo};
 
     let meta = Metadata {
@@ -44,14 +43,14 @@ macro_rules! setup_panic {
       let file_path =
         handle_dump(info).expect("human-panic: dumping logs to disk failed");
 
-      print_msg(file_path, &meta)
+      print_msg(&file_path, &meta)
         .expect("human-panic: printing error message to console failed");
     }));
   };
 }
 
 /// Utility function that prints a message to our human users
-pub fn print_msg(file_path: String, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg(file_path: &str, meta: &Metadata) -> IoResult<()> {
   let (_version, name, authors, homepage) = (
     meta.version,
     meta.name,

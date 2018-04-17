@@ -27,13 +27,12 @@ pub struct Report {
 impl Report {
   /// Create a new instance.
   pub fn new(method: Method, explanation: String) -> Self {
-    let operating_system;
-    if cfg!(windows) {
-      operating_system = "windows".to_string();
+    let operating_system = if cfg!(windows) {
+      "windows".to_string()
     } else {
       let platform = os_type::current_platform();
-      operating_system = format!("unix:{:?}", platform.os_type);
-    }
+      format!("unix:{:?}", platform.os_type)
+    };
 
     Self {
       crate_version: env!("CARGO_PKG_VERSION").to_string(),
