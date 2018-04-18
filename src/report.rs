@@ -10,7 +10,7 @@ use self::uuid::Uuid;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 pub enum Method {
   Panic,
 }
