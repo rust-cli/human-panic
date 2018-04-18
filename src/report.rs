@@ -7,7 +7,7 @@ extern crate uuid;
 
 use self::failure::Error;
 use self::uuid::Uuid;
-use backtrace::{Backtrace, BacktraceSymbol};
+use backtrace::Backtrace;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
