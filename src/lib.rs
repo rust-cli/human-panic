@@ -36,7 +36,7 @@ macro_rules! setup_panic {
   () => {
     use human_panic::*;
     use std::panic::{self, PanicInfo};
-  
+
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION"),
       name: env!("CARGO_PKG_NAME"),
