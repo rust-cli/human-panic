@@ -7,6 +7,7 @@ extern crate failure;
 #[macro_use]
 extern crate serde_derive;
 extern crate termcolor;
+extern crate backtrace;
 
 mod report;
 use report::{Method, Report};

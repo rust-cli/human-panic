@@ -23,6 +23,7 @@ toml = "0.4.6"
 serde = "1.0.38"
 failure = "0.1.1"
 os_type = "2.0.0"
+backtrace = "0.3"
 
 [features]
 nightly = []
