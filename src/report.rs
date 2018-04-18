@@ -10,7 +10,7 @@ use self::uuid::Uuid;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone, Copy)]
 pub enum Method {
   Panic,
 }
@@ -26,7 +26,12 @@ pub struct Report {
 
 impl Report {
   /// Create a new instance.
-  pub fn new(method: Method, explanation: String) -> Self {
+  pub fn new(
+    name: &str,
+    version: &str,
+    method: Method,
+    explanation: String,
+  ) -> Self {
     let operating_system = if cfg!(windows) {
       "windows".to_string()
     } else {
@@ -35,8 +40,8 @@ impl Report {
     };
 
     Self {
-      crate_version: env!("CARGO_PKG_VERSION").to_string(),
-      name: env!("CARGO_PKG_NAME").to_string(),
+      crate_version: version.to_string(),
+      name: name.to_string(),
       operating_system,
       method,
       explanation,

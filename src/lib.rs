@@ -13,8 +13,8 @@ use report::{Method, Report};
 
 use failure::Error as FailError;
 use std::io::{Result as IoResult, Write};
-use std::path::{Path, PathBuf};
 use std::panic::PanicInfo;
+use std::path::{Path, PathBuf};
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
@@ -45,8 +45,8 @@ macro_rules! setup_panic {
     };
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
-      let file_path =
-        handle_dump(info).expect("human-panic: dumping logs to disk failed");
+      let file_path = handle_dump(&meta, info)
+        .expect("human-panic: dumping logs to disk failed");
 
       print_msg(&file_path, &meta)
         .expect("human-panic: printing error message to console failed");
@@ -101,7 +101,10 @@ pub fn print_msg<P: AsRef<Path>>(
 }
 
 /// Utility function which will handle dumping information to disk
-pub fn handle_dump(panic_info: &PanicInfo) -> Result<PathBuf, FailError> {
+pub fn handle_dump(
+  meta: &Metadata,
+  panic_info: &PanicInfo,
+) -> Result<PathBuf, FailError> {
   let mut expl = String::new();
 
   let payload = panic_info.payload().downcast_ref::<&str>();
@@ -118,6 +121,6 @@ pub fn handle_dump(panic_info: &PanicInfo) -> Result<PathBuf, FailError> {
     None => expl.push_str("Panic location unknown.\n"),
   }
 
-  let report = Report::new(Method::Panic, expl);
+  let report = Report::new(&meta.name, &meta.version, Method::Panic, expl);
   report.persist()
 }
