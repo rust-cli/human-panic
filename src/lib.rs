@@ -2,12 +2,12 @@
 #![cfg_attr(feature = "nightly", feature(external_doc))]
 #![cfg_attr(feature = "nightly", doc(include = "../README.md"))]
 
+extern crate backtrace;
 #[macro_use]
 extern crate failure;
 #[macro_use]
 extern crate serde_derive;
 extern crate termcolor;
-extern crate backtrace;
 
 mod report;
 use report::{Method, Report};
