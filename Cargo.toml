@@ -27,3 +27,8 @@ backtrace = "0.3"
 
 [features]
 nightly = []
+
+[workspace]
+members = [
+  "tests/simple",
+]
