@@ -79,6 +79,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "human-panic"
 version = "0.3.1-alpha.0"
 dependencies = [
+ "backtrace 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "failure 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "os_type 2.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.38 (registry+https://github.com/rust-lang/crates.io-index)",

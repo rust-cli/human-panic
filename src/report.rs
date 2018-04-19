@@ -7,6 +7,7 @@ extern crate uuid;
 
 use self::failure::Error;
 use self::uuid::Uuid;
+use backtrace::Backtrace;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
@@ -22,6 +23,7 @@ pub struct Report {
   crate_version: String,
   explanation: String,
   method: Method,
+  backtrace: String,
 }
 
 impl Report {
@@ -39,12 +41,15 @@ impl Report {
       format!("unix:{:?}", platform.os_type)
     };
 
+    let backtrace = format!("{:#?}", Backtrace::new());
+
     Self {
       crate_version: version.to_string(),
       name: name.to_string(),
       operating_system,
       method,
       explanation,
+      backtrace,
     }
   }
 
@@ -59,7 +64,7 @@ impl Report {
     let file_name = format!("report-{}.toml", &uuid);
     let file_path = Path::new(tmp_dir).join(file_name);
     let mut file = File::create(&file_path)?;
-    let toml = toml::to_string(&self)?;
+    let toml = toml::to_string_pretty(&self)?;
     file.write_all(toml.as_bytes())?;
     Ok(file_path)
   }
