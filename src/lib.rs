@@ -19,15 +19,15 @@ use std::path::{Path, PathBuf};
 use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
-pub struct Metadata<'a> {
+pub struct Metadata {
   /// The crate version
-  pub version: &'a str,
+  pub version: &'static str,
   /// The crate name
-  pub name: &'a str,
+  pub name: &'static str,
   /// The list of authors of the crate
-  pub authors: &'a str,
+  pub authors: String,
   /// The URL of the crate's website
-  pub homepage: &'a str,
+  pub homepage: &'static str,
 }
 
 /// Setup the human panic hook that will make all panics
@@ -41,7 +41,7 @@ macro_rules! setup_panic {
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION"),
       name: env!("CARGO_PKG_NAME"),
-      authors: env!("CARGO_PKG_AUTHORS"),
+      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", "),
       homepage: env!("CARGO_PKG_HOMEPAGE"),
     };
 
@@ -61,7 +61,7 @@ pub fn print_msg<P: AsRef<Path>>(
   meta: &Metadata,
 ) -> IoResult<()> {
   let (_version, name, authors, homepage) =
-    (meta.version, meta.name, meta.authors, meta.homepage);
+    (meta.version, meta.name, &meta.authors, meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
