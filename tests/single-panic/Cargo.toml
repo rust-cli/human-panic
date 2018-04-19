@@ -1,5 +1,5 @@
 [package]
-name = "simple-human-panic-test"
+name = "single-panic-test"
 version = "0.1.0"
 authors = ["Human Panic Authors <human-panic-crate@example.com>"]
 

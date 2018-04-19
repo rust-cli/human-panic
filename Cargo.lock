@@ -343,7 +343,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "simple-human-panic-test"
+name = "single-panic-test"
 version = "0.1.0"
 dependencies = [
  "assert_cli 0.5.4 (registry+https://github.com/rust-lang/crates.io-index)",

@@ -4,7 +4,7 @@ extern crate assert_cli;
 fn integration() {
   assert_cli::Assert::main_binary()
     .stderr()
-    .contains("simple-human-panic-test")
+    .contains("single-panic-test")
     .stderr()
     .contains("Human Panic Authors")
     .stderr()
