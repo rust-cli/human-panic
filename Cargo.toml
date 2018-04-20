@@ -6,7 +6,7 @@ repository = "https://github.com/yoshuawuyts/human-panic"
 homepage = "https://github.com/yoshuawuyts/human-panic"
 documentation = "https://docs.rs/human-panic"
 description = "Panic messages for humans"
-authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>", 
+authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>",
            "Pascal Hertleif <killercup@gmail.com>",
            "Katharina Fey <kookie@spacekookie.de>"]
 readme = "README.md"
@@ -27,3 +27,8 @@ backtrace = "0.3"
 
 [features]
 nightly = []
+
+[workspace]
+members = [
+  "tests/single-panic",
+]
