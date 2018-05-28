@@ -12,7 +12,6 @@ extern crate termcolor;
 mod report;
 use report::{Method, Report};
 
-use failure::Error as FailError;
 use std::borrow::Cow;
 use std::io::{Result as IoResult, Write};
 use std::panic::PanicInfo;
@@ -48,6 +47,9 @@ macro_rules! setup_panic {
   };
 
   () => {
+    use human_panic::*;
+    use std::panic::{self, PanicInfo};
+
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION").into(),
       name: env!("CARGO_PKG_NAME").into(),
@@ -55,13 +57,18 @@ macro_rules! setup_panic {
       homepage: env!("CARGO_PKG_HOMEPAGE").into(),
     };
 
-    setup_panic!(meta);
+    panic::set_hook(Box::new(move |info: &PanicInfo| {
+      let file_path = handle_dump(&meta, info);
+
+      print_msg(file_path, &meta)
+        .expect("human-panic: printing error message to console failed");
+    }));
   };
 }
 
 /// Utility function that prints a message to our human users
 pub fn print_msg<P: AsRef<Path>>(
-  file_path: P,
+  file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
   let (_version, name, authors, homepage) =
@@ -83,7 +90,10 @@ pub fn print_msg<P: AsRef<Path>>(
     "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
-    file_path.as_ref().display(),
+    match file_path {
+      Some(fp) => format!("{}", fp.as_ref().display()),
+      None => "<Failed to store file to disk>".to_string(),
+    },
     name
   )?;
 
@@ -106,10 +116,7 @@ pub fn print_msg<P: AsRef<Path>>(
 }
 
 /// Utility function which will handle dumping information to disk
-pub fn handle_dump(
-  meta: &Metadata,
-  panic_info: &PanicInfo,
-) -> Result<PathBuf, FailError> {
+pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   let mut expl = String::new();
 
   let payload = panic_info.payload().downcast_ref::<&str>();
@@ -127,5 +134,12 @@ pub fn handle_dump(
   }
 
   let report = Report::new(&meta.name, &meta.version, Method::Panic, expl);
-  report.persist()
+
+  match report.persist() {
+    Ok(f) => Some(f),
+    Err(_) => {
+      eprintln!("{}", report.serialize().unwrap());
+      None
+    }
+  }
 }

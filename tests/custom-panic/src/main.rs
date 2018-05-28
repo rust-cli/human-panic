@@ -1,14 +1,12 @@
 #[macro_use]
 extern crate human_panic;
 
-use human_panic::Metadata;
-
 fn main() {
   setup_panic!(Metadata {
-    name: 
-    authors: "My Company Support <support@mycompany.com",
-    homepage: "support.mycompany.com"
-    
+    name: env!("CARGO_PKG_NAME").into(),
+    version: env!("CARGO_PKG_VERSION").into(),
+    authors: "My Company Support <support@mycompany.com".into(),
+    homepage: "support.mycompany.com".into(),
   });
 
   println!("A normal log message");
