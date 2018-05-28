@@ -13,6 +13,7 @@ mod report;
 use report::{Method, Report};
 
 use failure::Error as FailError;
+use std::borrow::Cow;
 use std::io::{Result as IoResult, Write};
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
@@ -21,13 +22,13 @@ use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 /// A convenient metadata struct that describes a crate
 pub struct Metadata {
   /// The crate version
-  pub version: &'static str,
+  pub version: Cow<'static, str>,
   /// The crate name
-  pub name: &'static str,
+  pub name: Cow<'static, str>,
   /// The list of authors of the crate
-  pub authors: String,
+  pub authors: Cow<'static, str>,
   /// The URL of the crate's website
-  pub homepage: &'static str,
+  pub homepage: Cow<'static, str>,
 }
 
 /// Setup the human panic hook that will make all panics
@@ -39,10 +40,10 @@ macro_rules! setup_panic {
     use std::panic::{self, PanicInfo};
 
     let meta = Metadata {
-      version: env!("CARGO_PKG_VERSION"),
-      name: env!("CARGO_PKG_NAME"),
-      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", "),
-      homepage: env!("CARGO_PKG_HOMEPAGE"),
+      version: env!("CARGO_PKG_VERSION").into(),
+      name: env!("CARGO_PKG_NAME").into(),
+      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
+      homepage: env!("CARGO_PKG_HOMEPAGE").into(),
     };
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -61,7 +62,7 @@ pub fn print_msg<P: AsRef<Path>>(
   meta: &Metadata,
 ) -> IoResult<()> {
   let (_version, name, authors, homepage) =
-    (meta.version, meta.name, &meta.authors, meta.homepage);
+    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
