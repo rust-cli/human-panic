@@ -31,4 +31,5 @@ nightly = []
 [workspace]
 members = [
   "tests/single-panic",
+  "tests/custom-panic",
 ]
