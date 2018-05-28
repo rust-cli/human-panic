@@ -48,7 +48,7 @@ macro_rules! setup_panic {
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&meta, info);
 
-      print_msg(&file_path, &meta)
+      print_msg(file_path, &meta)
         .expect("human-panic: printing error message to console failed");
     }));
   };
