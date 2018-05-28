@@ -35,6 +35,14 @@ pub struct Metadata {
 /// as beautiful as your shitty code.
 #[macro_export]
 macro_rules! setup_panic {
+  (meta: Metadata) => {
+    panic::set_hook(Box::new(move |info: &PanicInfo| {
+      let file_path = handle_dump(&meta, info);
+
+      print_msg(file_path, &meta)
+        .expect("human-panic: printing error message to console failed");
+    }));
+  };
   () => {
     use human_panic::*;
     use std::panic::{self, PanicInfo};
@@ -46,13 +54,7 @@ macro_rules! setup_panic {
       homepage: env!("CARGO_PKG_HOMEPAGE").into(),
     };
 
-    panic::set_hook(Box::new(move |info: &PanicInfo| {
-      let file_path = handle_dump(&meta, info)
-        .expect("human-panic: dumping logs to disk failed");
-
-      print_msg(&file_path, &meta)
-        .expect("human-panic: printing error message to console failed");
-    }));
+    setup_panic!(meta);    
   };
 }
 
