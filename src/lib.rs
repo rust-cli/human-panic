@@ -80,7 +80,10 @@ pub struct Metadata {
 /// The Metadata struct can't implement `Default` because of orphan rules, which
 /// means you need to provide all fields for initialisation.
 ///
-/// ```rust norun
+/// ```ignore
+/// #[macro_use]
+/// extern crate human_panic;
+/// 
 /// setup_panic!(Metadata {
 ///     name: env!("CARGO_PKG_NAME").into(),
 ///     version: env!("CARGO_PKG_VERSION").into(),
