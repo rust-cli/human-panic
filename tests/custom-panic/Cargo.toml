@@ -1,0 +1,10 @@
+[package]
+name = "custom-panic-test"
+version = "0.1.0"
+authors = ["Human Panic Authors <human-panic-crate@example.com>"]
+
+[dependencies]
+human-panic = { path = "../.." }
+
+[dev-dependencies]
+assert_cli = "0.5.4"
