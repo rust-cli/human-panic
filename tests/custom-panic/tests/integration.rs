@@ -6,9 +6,11 @@ fn integration() {
     .stderr()
     .contains("single-panic-test")
     .stderr()
-    .contains("Human Panic Authors")
+    .contains("My Company Support")
     .stderr()
-    .contains("human-panic-crate@example.com")
+    .contains("support@mycompany.com")
+    .stderr()
+    .contains("support.mycompany.com")
     .fails_with(101)
     .unwrap();
 }
