@@ -54,6 +54,10 @@ impl Report {
     }
   }
 
+  pub fn serialize(&self) -> Option<String> {
+    toml::to_string_pretty(&self).ok()
+  }
+
   /// Write a file to disk.
   pub fn persist(&self) -> Result<PathBuf, Error> {
     let uuid = Uuid::new_v4().hyphenated().to_string();
@@ -65,7 +69,7 @@ impl Report {
     let file_name = format!("report-{}.toml", &uuid);
     let file_path = Path::new(tmp_dir).join(file_name);
     let mut file = File::create(&file_path)?;
-    let toml = toml::to_string_pretty(&self)?;
+    let toml = self.serialize().unwrap();
     file.write_all(toml.as_bytes())?;
     Ok(file_path)
   }
