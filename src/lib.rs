@@ -84,7 +84,7 @@ pub struct Metadata {
 /// the values used in your `Cargo.toml` file.
 ///
 /// The Metadata struct can't implement `Default` because of orphan rules, which
-/// means you need to provide all fields for initialisation.Metadata
+/// means you need to provide all fields for initialisation.
 ///
 /// ```rust norun
 /// setup_panic!(Metadata {
