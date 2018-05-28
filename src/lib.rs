@@ -1,6 +1,6 @@
 //! Panic messages for humans
 //!
-//! Replacement for 
+//! Replacement for
 //! [`std::panic::catch_unwind`](https://doc.rust-lang.org/std/panic/fn.catch_unwind.html)
 //! to make errors nice for humans.
 //!
