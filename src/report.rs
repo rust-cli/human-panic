@@ -8,6 +8,7 @@ extern crate uuid;
 use self::failure::Error;
 use self::uuid::Uuid;
 use backtrace::Backtrace;
+use std::borrow::Cow;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
@@ -19,7 +20,7 @@ pub enum Method {
 #[derive(Debug, Serialize)]
 pub struct Report {
   name: String,
-  operating_system: String,
+  operating_system: Cow<'static, str>,
   crate_version: String,
   explanation: String,
   method: Method,
@@ -35,17 +36,17 @@ impl Report {
     explanation: String,
   ) -> Self {
     let operating_system = if cfg!(windows) {
-      "windows".to_string()
+      "windows".into()
     } else {
       let platform = os_type::current_platform();
-      format!("unix:{:?}", platform.os_type)
+      format!("unix:{:?}", platform.os_type).into()
     };
 
     let backtrace = format!("{:#?}", Backtrace::new());
 
     Self {
-      crate_version: version.to_string(),
-      name: name.to_string(),
+      crate_version: version.into(),
+      name: name.into(),
       operating_system,
       method,
       explanation,
