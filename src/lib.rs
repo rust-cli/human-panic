@@ -80,7 +80,7 @@ pub fn print_msg<P: AsRef<Path>>(
      report as an attachment.\n",
     match file_path {
       Some(fp) => format!("{}", fp.as_ref().display()),
-      None => format!("<Failed to store file to disk>"),
+      None => "<Failed to store file to disk>".to_string(),
     },
     name
   )?;
