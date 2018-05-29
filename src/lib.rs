@@ -94,7 +94,7 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use human_panic::*;
+    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -106,7 +106,7 @@ macro_rules! setup_panic {
   };
 
   () => {
-    use human_panic::*;
+    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
 
     let meta = Metadata {
