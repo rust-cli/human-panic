@@ -170,6 +170,8 @@ pub fn print_msg<P: AsRef<Path>>(
   )?;
   writeln!(&mut buffer, "Thank you kindly!")?;
 
+  buffer.reset()?;
+
   stderr.print(&buffer).unwrap();
   Ok(())
 }
