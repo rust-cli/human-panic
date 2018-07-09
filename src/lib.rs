@@ -29,14 +29,17 @@
 //! ```txt
 //! Well, this is embarrassing.
 //!
-//! human-panic had a problem and crashed. To help us diagnose the problem you can send us a crash report.
+//! human-panic had a problem and crashed.
+//! To help us diagnose the problem you can send us a crash report.
 //!
-//! We have generated a report file at "/var/folders/zw/bpfvmq390lv2c6gn_6byyv0w0000gn/T/report-8351cad6-d2b5-4fe8-accd-1fcbf4538792.toml". Submit an issue or email with the subject of "human-panic Crash Report" and include the report as an attachment.
+//! We have generated a report file at "/var/folders/zw/bpfvmq390lv2c6gn_6byyv0w0000gn/T/report-8351cad6-d2b5-4fe8-accd-1fcbf4538792.toml".
+//! Submit an issue or email with the subject of "human-panic Crash Report" and include the report as an attachment.
 //!
 //! - Homepage: https://github.com/yoshuawuyts/human-panic
 //! - Authors: Yoshua Wuyts <yoshuawuyts@gmail.com>
 //!
-//! We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
+//! We take privacy seriously, and do not perform any automated error collection.
+//! In order to improve the software, we rely on people to submit reports.
 //!
 //! Thank you kindly!
 
@@ -49,6 +52,19 @@ extern crate failure;
 #[macro_use]
 extern crate serde_derive;
 extern crate termcolor;
+
+#[cfg(target_os = "windows")]
+#[path = "windows_window.rs"]
+pub mod window;
+
+#[cfg(target_os = "linux")]
+#[path = "linux_window.rs"]
+pub mod window;
+
+#[cfg(not(any(target_os = "linux", target_os = "windows")))]
+pub mod window {
+    pub fn create_window(_: String) { }
+}
 
 mod report;
 use report::{Method, Report};
@@ -69,6 +85,8 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
+  /// Should an error message window be created. Only implemented for Windows + X11. noop on other platforms
+  pub create_window: bool,
 }
 
 /// `human-panic` initialisation macro
@@ -89,19 +107,33 @@ pub struct Metadata {
 ///     version: env!("CARGO_PKG_VERSION").into(),
 ///     authors: "My Company Support <support@mycompany.com".into(),
 ///     homepage: "support.mycompany.com".into(),
+///     create_window: false,
 /// });
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use $crate::{handle_dump, print_msg, Metadata};
+    use $crate::{handle_dump, print_msg, write_msg, Metadata};
+    use $crate::window;
     use std::panic::{self, PanicInfo};
+    use std::io::{Cursor, Read};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&$meta, info);
 
-      print_msg(file_path, &$meta)
+      print_msg(file_path.clone(), &$meta)
         .expect("human-panic: printing error message to console failed");
+
+      if $meta.create_window {
+        let mut buffer = Cursor::new(vec!());
+        write_msg(file_path, &$meta, &mut buffer).expect("human-panic: generating error message for GUI failed: write_msg");
+        buffer.set_position(0);
+
+        let mut message = String::new();
+        buffer.read_to_string(&mut message).expect("human-panic: generating error message for GUI failed: read_to_string");
+
+        window::create_window(message);
+      }
     }));
   };
 
@@ -114,6 +146,7 @@ macro_rules! setup_panic {
       name: env!("CARGO_PKG_NAME").into(),
       authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
       homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+      create_window: false,
     };
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -125,28 +158,41 @@ macro_rules! setup_panic {
   };
 }
 
-/// Utility function that prints a message to our human users
+/// Utility function that prints the message to our human users
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage) =
-    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
-
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
   buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
 
-  writeln!(&mut buffer, "Well, this is embarrassing.\n")?;
+  write_msg(file_path, meta, &mut buffer)?;
+  buffer.reset()?;
+
+  stderr.print(&buffer).unwrap();
+  Ok(())
+}
+
+/// Utility function that generates the message
+pub fn write_msg<P: AsRef<Path>>(
+  file_path: Option<P>,
+  meta: &Metadata,
+  buffer: &mut Write,
+) -> IoResult<()> {
+  let (_version, name, authors, homepage) =
+    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+
+  writeln!(buffer, "Well, this is embarrassing.\n")?;
   writeln!(
-    &mut buffer,
-    "{} had a problem and crashed. To help us diagnose the \
+    buffer,
+    "{} had a problem and crashed.\nTo help us diagnose the \
      problem you can send us a crash report.\n",
     name
   )?;
   writeln!(
-    &mut buffer,
-    "We have generated a report file at \"{}\". Submit an \
+    buffer,
+    "We have generated a report file at \"{}\".\nSubmit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
     match file_path {
@@ -157,22 +203,19 @@ pub fn print_msg<P: AsRef<Path>>(
   )?;
 
   if !homepage.is_empty() {
-    writeln!(&mut buffer, "- Homepage: {}", homepage)?;
+    writeln!(buffer, "- Homepage: {}", homepage)?;
   }
   if !authors.is_empty() {
-    writeln!(&mut buffer, "- Authors: {}", authors)?;
+    writeln!(buffer, "- Authors: {}", authors)?;
   }
   writeln!(
-    &mut buffer,
+    buffer,
     "\nWe take privacy seriously, and do not perform any \
-     automated error collection. In order to improve the software, we rely on \
+     automated error collection.\nIn order to improve the software, we rely on \
      people to submit reports.\n"
   )?;
-  writeln!(&mut buffer, "Thank you kindly!")?;
+  writeln!(buffer, "Thank you kindly!")?;
 
-  buffer.reset()?;
-
-  stderr.print(&buffer).unwrap();
   Ok(())
 }
 
