@@ -1,7 +1,7 @@
 //! Panic messages for humans
 //!
-//! Replacement for
-//! [`std::panic::catch_unwind`](https://doc.rust-lang.org/std/panic/fn.catch_unwind.html)
+//! Handles panics by calling
+//! [`std::panic::set_hook`](https://doc.rust-lang.org/std/panic/fn.set_hook.html)
 //! to make errors nice for humans.
 //!
 //! ## Why?
