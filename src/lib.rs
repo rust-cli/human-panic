@@ -5,13 +5,14 @@
 //! to make errors nice for humans.
 //!
 //! ## Why?
-//! When you're building a CLI, polish is super important. Even though Rust is
-//! pretty great at safety, it's not unheard of to access the wrong index in a
-//! vector or have an assert fail somewhere.
+//! When you're building an application, polish is super important. Even though
+//! rust is pretty great at safety, it's not unheard of to access the wrong index
+//! in a vector or have an assert fail somewhere.
 //!
 //! When an error eventually occurs, you probably will want to know about it. So
-//! instead of just providing an error message on the command line, we can create a
-//! call to action for people to submit a report.
+//! instead of just providing an error message on the command line or the GUI
+//! suddenly disappearing, we can create a call to action for people to submit a
+//! report.
 //!
 //! This should empower people to engage in communication, lowering the chances
 //! people might get frustrated. And making it easier to figure out what might be
@@ -42,6 +43,11 @@
 //! In order to improve the software, we rely on people to submit reports.
 //!
 //! Thank you kindly!
+//!
+//! ## GUI Applications
+//! GUI applications don't have a terminal to output errors to.
+//! The errors printed to the terminal can optionally be displayed in a message box window.
+//! This is enabled by using a `Metadata` struct with `create_window: true`.
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(external_doc))]
