@@ -11,7 +11,7 @@ to make errors nice for humans.
 
 ## Why?
 When you're building an application, polish is super important. Even though
-rust is pretty great at safety, it's not unheard of to access the wrong index
+Rust is pretty great at safety, it's not unheard of to access the wrong index
 in a vector or have an assert fail somewhere.
 
 When an error eventually occurs, you probably will want to know about it. So
