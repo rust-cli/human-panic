@@ -30,17 +30,14 @@
 //! ```txt
 //! Well, this is embarrassing.
 //!
-//! human-panic had a problem and crashed.
-//! To help us diagnose the problem you can send us a crash report.
+//! human-panic had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 //!
-//! We have generated a report file at "/var/folders/zw/bpfvmq390lv2c6gn_6byyv0w0000gn/T/report-8351cad6-d2b5-4fe8-accd-1fcbf4538792.toml".
-//! Submit an issue or email with the subject of "human-panic Crash Report" and include the report as an attachment.
+//! We have generated a report file at "/var/folders/zw/bpfvmq390lv2c6gn_6byyv0w0000gn/T/report-8351cad6-d2b5-4fe8-accd-1fcbf4538792.toml". Submit an issue or email with the subject of "human-panic Crash Report" and include the report as an attachment.
 //!
 //! - Homepage: https://github.com/yoshuawuyts/human-panic
 //! - Authors: Yoshua Wuyts <yoshuawuyts@gmail.com>
 //!
-//! We take privacy seriously, and do not perform any automated error collection.
-//! In order to improve the software, we rely on people to submit reports.
+//! We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
 //!
 //! Thank you kindly!
 //!
@@ -192,13 +189,13 @@ pub fn write_msg<P: AsRef<Path>>(
   writeln!(buffer, "Well, this is embarrassing.\n")?;
   writeln!(
     buffer,
-    "{} had a problem and crashed.\nTo help us diagnose the \
+    "{} had a problem and crashed. To help us diagnose the \
      problem you can send us a crash report.\n",
     name
   )?;
   writeln!(
     buffer,
-    "We have generated a report file at \"{}\".\nSubmit an \
+    "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
     match file_path {
@@ -217,7 +214,7 @@ pub fn write_msg<P: AsRef<Path>>(
   writeln!(
     buffer,
     "\nWe take privacy seriously, and do not perform any \
-     automated error collection.\nIn order to improve the software, we rely on \
+     automated error collection. In order to improve the software, we rely on \
      people to submit reports.\n"
   )?;
   writeln!(buffer, "Thank you kindly!")?;
