@@ -90,13 +90,6 @@ stack backtrace:
   17:                0x0 - <unknown>'''
 ```
 
-## GUI Application
-
-GUI applications don't have a terminal to output errors to.
-The errors printed to the terminal can optionally be displayed in a message box window.
-This is enabled by using a `Metadata` struct with `create_window: true`.
-![window_example.png]()
-
 ## Usage
 
 ```rust no_run
@@ -116,6 +109,13 @@ fn main() {
 ```sh
 $ cargo add human-panic
 ```
+
+## GUI Application
+
+GUI applications don't have a terminal to output errors to.
+The errors printed to the terminal can optionally be displayed in a message box window.
+This is enabled by using a `Metadata` struct with `create_window: true`.
+![Example Image](window_example.png)
 
 ## License
 [MIT](./LICENSE-MIT) OR [Apache-2.0](./LICENSE-APACHE)
