@@ -6,7 +6,7 @@ use std::os::windows::ffi::OsStrExt;
 use std::ptr::null_mut;
 use self::winapi::um::winuser::{MB_OK, MessageBoxW};
 
-pub fn create_window(message: String) {
+pub(crate) fn create_window(message: String) {
   let message_wide: Vec<u16> = OsStr::new(message.as_str()).encode_wide().chain(once(0)).collect();
   let panic_wide: Vec<u16> = OsStr::new("Panic!").encode_wide().chain(once(0)).collect();
   let ret = unsafe { MessageBoxW(null_mut(), message_wide.as_ptr(), panic_wide.as_ptr(), MB_OK) };

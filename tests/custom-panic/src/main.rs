@@ -7,7 +7,6 @@ fn main() {
     version: env!("CARGO_PKG_VERSION").into(),
     authors: "My Company Support <support@mycompany.com".into(),
     homepage: "support.mycompany.com".into(),
-    create_window: false,
   });
 
   println!("A normal log message");

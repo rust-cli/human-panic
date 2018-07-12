@@ -11,7 +11,7 @@ use self::x11_dl::xlib::XRectangle;
 
 const TEXT_MARGIN: i32 = 10;
 
-pub fn create_window(message: String) {
+pub(crate) fn create_window(message: String) {
   // window state
   let mut window_width = 600;
   let mut window_height = 400;

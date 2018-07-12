@@ -10,9 +10,8 @@
 //! in a vector or have an assert fail somewhere.
 //!
 //! When an error eventually occurs, you probably will want to know about it. So
-//! instead of just providing an error message on the command line or the GUI
-//! suddenly disappearing, we can create a call to action for people to submit a
-//! report.
+//! instead of crashing without notice or printing a confusing error message we
+//! can create a call to action for people to submit a report.
 //!
 //! This should empower people to engage in communication, lowering the chances
 //! people might get frustrated. And making it easier to figure out what might be
@@ -44,7 +43,8 @@
 //! ## GUI Applications
 //! GUI applications don't have a terminal to output errors to.
 //! The errors printed to the terminal can optionally be displayed in a message box window.
-//! This is enabled by using a `Metadata` struct with `create_window: true`.
+//! This is enabled with `human-panic = { version = "1.0", features = ["gui"] }`
+//! in your `cargo.toml`.
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(external_doc))]
@@ -56,20 +56,9 @@ extern crate failure;
 extern crate serde_derive;
 extern crate termcolor;
 
-#[cfg(target_os = "windows")]
-#[path = "windows_window.rs"]
 pub mod window;
-
-#[cfg(target_os = "linux")]
-#[path = "linux_window.rs"]
-pub mod window;
-
-#[cfg(not(any(target_os = "linux", target_os = "windows")))]
-pub mod window {
-    pub fn create_window(_: String) { }
-}
-
 mod report;
+
 use report::{Method, Report};
 
 use std::borrow::Cow;
@@ -88,8 +77,6 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
-  /// Should an error message window be created. Only implemented for Windows + X11. noop on other platforms
-  pub create_window: bool,
 }
 
 /// `human-panic` initialisation macro
@@ -110,38 +97,26 @@ pub struct Metadata {
 ///     version: env!("CARGO_PKG_VERSION").into(),
 ///     authors: "My Company Support <support@mycompany.com".into(),
 ///     homepage: "support.mycompany.com".into(),
-///     create_window: false,
 /// });
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use $crate::{handle_dump, print_msg, write_msg, Metadata};
-    use $crate::window;
+    use $crate::{handle_dump, Metadata};
     use std::panic::{self, PanicInfo};
-    use std::io::{Cursor, Read};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&$meta, info);
 
-      print_msg(file_path.clone(), &$meta)
+      $crate::print_msg(file_path.clone(), &$meta)
         .expect("human-panic: printing error message to console failed");
 
-      if $meta.create_window {
-        let mut buffer = Cursor::new(vec!());
-        write_msg(file_path, &$meta, &mut buffer).expect("human-panic: generating error message for GUI failed: write_msg");
-        buffer.set_position(0);
-
-        let mut message = String::new();
-        buffer.read_to_string(&mut message).expect("human-panic: generating error message for GUI failed: read_to_string");
-
-        window::create_window(message);
-      }
+      $crate::window::create_window(file_path, &$meta);
     }));
   };
 
   () => {
-    use $crate::{handle_dump, print_msg, Metadata};
+    use $crate::{handle_dump, Metadata};
     use std::panic::{self, PanicInfo};
 
     let meta = Metadata {
@@ -149,14 +124,15 @@ macro_rules! setup_panic {
       name: env!("CARGO_PKG_NAME").into(),
       authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
       homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-      create_window: false,
     };
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&meta, info);
 
-      print_msg(file_path, &meta)
+      $crate::print_msg(file_path.clone(), &meta)
         .expect("human-panic: printing error message to console failed");
+
+      $crate::window::create_window(file_path, &meta);
     }));
   };
 }
