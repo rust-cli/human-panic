@@ -56,8 +56,8 @@ extern crate failure;
 extern crate serde_derive;
 extern crate termcolor;
 
-pub mod window;
 mod report;
+pub mod window;
 
 use report::{Method, Report};
 
@@ -102,8 +102,8 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use $crate::{handle_dump, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, Metadata};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&$meta, info);
@@ -116,8 +116,8 @@ macro_rules! setup_panic {
   };
 
   () => {
-    use $crate::{handle_dump, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, Metadata};
 
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION").into(),

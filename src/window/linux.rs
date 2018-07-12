@@ -6,8 +6,8 @@ use std::os::raw::*;
 use std::ptr;
 
 use self::x11_dl::xlib;
-use self::x11_dl::xlib::Xlib;
 use self::x11_dl::xlib::XRectangle;
+use self::x11_dl::xlib::Xlib;
 
 const TEXT_MARGIN: i32 = 10;
 
@@ -39,18 +39,20 @@ pub(crate) fn create_window(message: String) {
     attributes.background_pixel = (xlib.XWhitePixel)(display, screen);
 
     // window height gets reset later
-    (xlib.XCreateWindow)(display,
-                         root,
-                         0,
-                         0,
-                         window_width,
-                         window_height,
-                         0,
-                         0,
-                         xlib::InputOutput as c_uint,
-                         ptr::null_mut(),
-                         xlib::CWBackPixel,
-                         &mut attributes)
+    (xlib.XCreateWindow)(
+      display,
+      root,
+      0,
+      0,
+      window_width,
+      window_height,
+      0,
+      0,
+      xlib::InputOutput as c_uint,
+      ptr::null_mut(),
+      xlib::CWBackPixel,
+      &mut attributes,
+    )
   };
 
   // set window title.
@@ -70,42 +72,45 @@ pub(crate) fn create_window(message: String) {
   };
   let mut protocols = [wm_delete_window];
   unsafe {
-    (xlib.XSetWMProtocols)(display,
-                           window,
-                           protocols.as_mut_ptr(),
-                           protocols.len() as c_int)
+    (xlib.XSetWMProtocols)(
+      display,
+      window,
+      protocols.as_mut_ptr(),
+      protocols.len() as c_int,
+    )
   };
 
   // let the window manager know this is a dialog box.
   let wm_window_type_str = CString::new("_NET_WM_WINDOW_TYPE").unwrap();
-  let wm_window_type_dialog_str = CString::new("_NET_WM_WINDOW_TYPE_DIALOG")
-    .unwrap();
+  let wm_window_type_dialog_str =
+    CString::new("_NET_WM_WINDOW_TYPE_DIALOG").unwrap();
   let wm_window_type = unsafe {
     (xlib.XInternAtom)(display, wm_window_type_str.as_ptr(), xlib::False)
   };
-  let wm_window_type_dialog =
-    unsafe {
-      (xlib.XInternAtom)(display,
-                         wm_window_type_dialog_str.as_ptr(),
-                         xlib::False)
-    };
+  let wm_window_type_dialog = unsafe {
+    (xlib.XInternAtom)(display, wm_window_type_dialog_str.as_ptr(), xlib::False)
+  };
   let wm_window_type_dialog = &wm_window_type_dialog as *const u64 as *const u8;
   unsafe {
-    (xlib.XChangeProperty)(display,
-                           window,
-                           wm_window_type,
-                           xlib::XA_ATOM,
-                           32,
-                           xlib::PropModeReplace,
-                           wm_window_type_dialog,
-                           1)
+    (xlib.XChangeProperty)(
+      display,
+      window,
+      wm_window_type,
+      xlib::XA_ATOM,
+      32,
+      xlib::PropModeReplace,
+      wm_window_type_dialog,
+      1,
+    )
   };
 
   // specify events to use
   unsafe {
-    (xlib.XSelectInput)(display,
-                        window,
-                        xlib::ExposureMask | xlib::StructureNotifyMask)
+    (xlib.XSelectInput)(
+      display,
+      window,
+      xlib::ExposureMask | xlib::StructureNotifyMask,
+    )
   };
 
   // create graphics context
@@ -115,17 +120,19 @@ pub(crate) fn create_window(message: String) {
   };
 
   // create font set
-  let font_list = CString::new("-*-*-medium-r-normal--*-120-*-*-*-*-*-*")
-    .unwrap();
+  let font_list =
+    CString::new("-*-*-medium-r-normal--*-120-*-*-*-*-*-*").unwrap();
   let mut missing = ptr::null_mut();
   let mut num_missing = 0;
   let mut foo = ptr::null_mut();
   let font_set = unsafe {
-    (xlib.XCreateFontSet)(display,
-                          font_list.as_ptr() as *const c_char,
-                          &mut missing,
-                          &mut num_missing,
-                          &mut foo)
+    (xlib.XCreateFontSet)(
+      display,
+      font_list.as_ptr() as *const c_char,
+      &mut missing,
+      &mut num_missing,
+      &mut foo,
+    )
   };
 
   // show window.
@@ -169,7 +176,7 @@ pub(crate) fn create_window(message: String) {
       xlib::ConfigureNotify => {
         let configure_event: &xlib::XConfigureEvent = event.as_ref();
         window_width = configure_event.width as u32;
-                #[allow(unused_assignments)]
+        #[allow(unused_assignments)]
         {
           window_height = configure_event.height as u32;
         }
@@ -180,14 +187,16 @@ pub(crate) fn create_window(message: String) {
           split_message(&xlib, font_set, &message, window_width as i32);
         for (i, line) in message_lines.iter().enumerate() {
           unsafe {
-            (xlib.Xutf8DrawString)(display,
-                                   window,
-                                   font_set,
-                                   gc,
-                                   TEXT_MARGIN,
-                                   (i as i32 + 1) * max_line_height,
-                                   line.as_ptr() as *const c_char,
-                                   line.to_bytes().len() as i32)
+            (xlib.Xutf8DrawString)(
+              display,
+              window,
+              font_set,
+              gc,
+              TEXT_MARGIN,
+              (i as i32 + 1) * max_line_height,
+              line.as_ptr() as *const c_char,
+              line.to_bytes().len() as i32,
+            )
           };
         }
       }
@@ -199,10 +208,11 @@ pub(crate) fn create_window(message: String) {
   unsafe { (xlib.XCloseDisplay)(display) };
 }
 
-fn line_width_height(xlib: &Xlib,
-                     font_set: *mut xlib::_XOC,
-                     text: &CString)
-                     -> (u16, u16) {
+fn line_width_height(
+  xlib: &Xlib,
+  font_set: *mut xlib::_XOC,
+  text: &CString,
+) -> (u16, u16) {
   let mut overall_ink = XRectangle {
     x: 0,
     y: 0,
@@ -211,21 +221,24 @@ fn line_width_height(xlib: &Xlib,
   };
   let mut overall_logical = overall_ink.clone();
   unsafe {
-    (xlib.Xutf8TextExtents)(font_set,
-                            text.as_ptr() as *const c_char,
-                            text.to_bytes().len() as i32,
-                            &mut overall_ink as *mut XRectangle,
-                            &mut overall_logical as *mut XRectangle)
+    (xlib.Xutf8TextExtents)(
+      font_set,
+      text.as_ptr() as *const c_char,
+      text.to_bytes().len() as i32,
+      &mut overall_ink as *mut XRectangle,
+      &mut overall_logical as *mut XRectangle,
+    )
   };
 
   (overall_logical.width, overall_logical.height)
 }
 
-fn split_message(xlib: &Xlib,
-                 font_set: *mut xlib::_XOC,
-                 message: &String,
-                 window_width: i32)
-                 -> Vec<CString> {
+fn split_message(
+  xlib: &Xlib,
+  font_set: *mut xlib::_XOC,
+  message: &String,
+  window_width: i32,
+) -> Vec<CString> {
   let mut processed_lines = vec![];
   for line in message.lines() {
     if line.is_empty() {
