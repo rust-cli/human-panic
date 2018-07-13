@@ -10,13 +10,13 @@ to make errors nice for humans.
 - [Crates.io][2]
 
 ## Why?
-When you're building a CLI, polish is super important. Even though Rust is
-pretty great at safety, it's not unheard of to access the wrong index in a
-vector or have an assert fail somewhere.
+When you're building an application, polish is super important. Even though
+Rust is pretty great at safety, it's not unheard of to access the wrong index
+in a vector or have an assert fail somewhere.
 
 When an error eventually occurs, you probably will want to know about it. So
-instead of just providing an error message on the command line, we can create a
-call to action for people to submit a report.
+instead of crashing without notice or printing a confusing error message we
+can create a call to action for people to submit a report.
 
 This should empower people to engage in communication, lowering the chances
 people might get frustrated. And making it easier to figure out what might be
@@ -108,6 +108,14 @@ fn main() {
 ```sh
 $ cargo add human-panic
 ```
+
+## GUI Application
+
+GUI applications don't have a terminal to output errors to.
+The errors printed to the terminal can optionally be displayed in a message box window.
+This is enabled with `human-panic = { version = "1.0", features = ["gui"] }` in
+your `cargo.toml`.
+![Example Image](window_example.png)
 
 ## License
 [MIT](./LICENSE-MIT) OR [Apache-2.0](./LICENSE-APACHE)

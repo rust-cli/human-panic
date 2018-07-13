@@ -5,13 +5,13 @@
 //! to make errors nice for humans.
 //!
 //! ## Why?
-//! When you're building a CLI, polish is super important. Even though Rust is
-//! pretty great at safety, it's not unheard of to access the wrong index in a
-//! vector or have an assert fail somewhere.
+//! When you're building an application, polish is super important. Even though
+//! Rust is pretty great at safety, it's not unheard of to access the wrong index
+//! in a vector or have an assert fail somewhere.
 //!
 //! When an error eventually occurs, you probably will want to know about it. So
-//! instead of just providing an error message on the command line, we can create a
-//! call to action for people to submit a report.
+//! instead of crashing without notice or printing a confusing error message we
+//! can create a call to action for people to submit a report.
 //!
 //! This should empower people to engage in communication, lowering the chances
 //! people might get frustrated. And making it easier to figure out what might be
@@ -39,6 +39,12 @@
 //! We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
 //!
 //! Thank you kindly!
+//!
+//! ## GUI Applications
+//! GUI applications don't have a terminal to output errors to.
+//! The errors printed to the terminal can optionally be displayed in a message box window.
+//! This is enabled with `human-panic = { version = "1.0", features = ["gui"] }`
+//! in your `cargo.toml`.
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(external_doc))]
@@ -51,6 +57,8 @@ extern crate serde_derive;
 extern crate termcolor;
 
 mod report;
+pub mod window;
+
 use report::{Method, Report};
 
 use std::borrow::Cow;
@@ -94,20 +102,22 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, Metadata};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&$meta, info);
 
-      print_msg(file_path, &$meta)
+      $crate::print_msg(file_path.clone(), &$meta)
         .expect("human-panic: printing error message to console failed");
+
+      $crate::window::create_window(file_path, &$meta);
     }));
   };
 
   () => {
-    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, Metadata};
 
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION").into(),
@@ -119,33 +129,48 @@ macro_rules! setup_panic {
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&meta, info);
 
-      print_msg(file_path, &meta)
+      $crate::print_msg(file_path.clone(), &meta)
         .expect("human-panic: printing error message to console failed");
+
+      $crate::window::create_window(file_path, &meta);
     }));
   };
 }
 
-/// Utility function that prints a message to our human users
+/// Utility function that prints the message to our human users
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage) =
-    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
-
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
   buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
 
-  writeln!(&mut buffer, "Well, this is embarrassing.\n")?;
+  write_msg(file_path, meta, &mut buffer)?;
+  buffer.reset()?;
+
+  stderr.print(&buffer).unwrap();
+  Ok(())
+}
+
+/// Utility function that generates the message
+pub fn write_msg<P: AsRef<Path>>(
+  file_path: Option<P>,
+  meta: &Metadata,
+  buffer: &mut Write,
+) -> IoResult<()> {
+  let (_version, name, authors, homepage) =
+    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+
+  writeln!(buffer, "Well, this is embarrassing.\n")?;
   writeln!(
-    &mut buffer,
+    buffer,
     "{} had a problem and crashed. To help us diagnose the \
      problem you can send us a crash report.\n",
     name
   )?;
   writeln!(
-    &mut buffer,
+    buffer,
     "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
@@ -157,22 +182,19 @@ pub fn print_msg<P: AsRef<Path>>(
   )?;
 
   if !homepage.is_empty() {
-    writeln!(&mut buffer, "- Homepage: {}", homepage)?;
+    writeln!(buffer, "- Homepage: {}", homepage)?;
   }
   if !authors.is_empty() {
-    writeln!(&mut buffer, "- Authors: {}", authors)?;
+    writeln!(buffer, "- Authors: {}", authors)?;
   }
   writeln!(
-    &mut buffer,
+    buffer,
     "\nWe take privacy seriously, and do not perform any \
      automated error collection. In order to improve the software, we rely on \
      people to submit reports.\n"
   )?;
-  writeln!(&mut buffer, "Thank you kindly!")?;
+  writeln!(buffer, "Thank you kindly!")?;
 
-  buffer.reset()?;
-
-  stderr.print(&buffer).unwrap();
   Ok(())
 }
 
