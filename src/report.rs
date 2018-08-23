@@ -23,6 +23,7 @@ pub struct Report {
   operating_system: Cow<'static, str>,
   crate_version: String,
   explanation: String,
+  cause: String,
   method: Method,
   backtrace: String,
 }
@@ -34,6 +35,7 @@ impl Report {
     version: &str,
     method: Method,
     explanation: String,
+    cause: String,
   ) -> Self {
     let operating_system = if cfg!(windows) {
       "windows".into()
@@ -50,6 +52,7 @@ impl Report {
       operating_system,
       method,
       explanation,
+      cause,
       backtrace,
     }
   }
