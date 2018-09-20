@@ -1,4 +1,5 @@
-//! Panic messages for humans
+//! Panic message
+//! #[cfg(feature = "nightly")]s for humans
 //!
 //! Handles panics by calling
 //! [`std::panic::set_hook`](https://doc.rust-lang.org/std/panic/fn.set_hook.html)
@@ -9,7 +10,8 @@
 //! pretty great at safety, it's not unheard of to access the wrong index in a
 //! vector or have an assert fail somewhere.
 //!
-//! When an error eventually occurs, you probably will want to know about it. So
+//! When an error eventually occurs, you proba
+//! #[cfg(feature = "nightly")]bly will want to know about it. So
 //! instead of just providing an error message on the command line, we can create a
 //! call to action for people to submit a report.
 //!
@@ -74,7 +76,8 @@ pub struct Metadata {
 
 /// `human-panic` initialisation macro
 ///
-/// You can either call this macro with no arguments `setup_panic!()` or
+/// You can either call this macro with no arguments `setup_pan
+/// #[cfg(feature = "nightly")]ic!()` or
 /// with a Metadata struct, if you don't want the error message to display
 /// the values used in your `Cargo.toml` file.
 ///
@@ -102,6 +105,7 @@ macro_rules! setup_panic {
       let file_path = handle_dump(&$meta, info);
 
       print_msg(file_path, &$meta)
+      #[cfg(feature = "nightly")]
         .expect("human-panic: printing error message to console failed");
     }));
   };
@@ -121,12 +125,14 @@ macro_rules! setup_panic {
       let file_path = handle_dump(&meta, info);
 
       print_msg(file_path, &meta)
+      #[cfg(feature = "nightly")]
         .expect("human-panic: printing error message to console failed");
     }));
   };
 }
 
-/// Utility function that prints a message to our human users
+
+#[cfg(feature = "nightly")]/// Utility function that prints a message to our human users
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
@@ -180,10 +186,14 @@ pub fn print_msg<P: AsRef<Path>>(
 /// Utility function which will handle dumping information to disk
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   let mut expl = String::new();
+  #[cfg(feature = "nightly")]
   let cause = match panic_info.message() {
     Some(m) => format!("{}", m),
     None => "Unknown".into(),
   };
+
+  #[cfg(not(feature = "nightly"))]
+  let cause = String::from("Not supported by application");
 
   let payload = panic_info.payload().downcast_ref::<&str>();
   if let Some(payload) = payload {
