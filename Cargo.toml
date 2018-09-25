@@ -21,7 +21,7 @@ uuid = { version = "0.6", features = ["v4"] }
 serde_derive = "1.0.38"
 toml = "0.4.6"
 serde = "1.0.38"
-failure = "0.1.1"
+failure = { version = "0.1.1", default-features = false, features = ["std"] }
 os_type = "2.0.0"
 backtrace = "0.3"
 
