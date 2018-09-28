@@ -63,7 +63,7 @@ impl Report {
 
   /// Write a file to disk.
   pub fn persist(&self) -> Result<PathBuf, Error> {
-    let uuid = Uuid::new_v4().hyphenated().to_string();
+    let uuid = Uuid::new_v4().to_hyphenated().to_string();
     let tmp_dir = env::temp_dir();
     let tmp_dir = match tmp_dir.to_str() {
       Some(dir) => dir,
