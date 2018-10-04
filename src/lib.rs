@@ -42,6 +42,7 @@
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(external_doc))]
+#![cfg_attr(feature = "nightly", feature(panic_info_message))]
 
 extern crate backtrace;
 #[macro_use]
@@ -179,6 +180,15 @@ pub fn print_msg<P: AsRef<Path>>(
 /// Utility function which will handle dumping information to disk
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   let mut expl = String::new();
+  #[cfg(feature = "nightly")]
+  let cause = match panic_info.message() {
+    Some(m) => format!("{}", m),
+    None => "Unknown".into(),
+  };
+
+  #[cfg(not(feature = "nightly"))]
+  let cause =
+    String::from("Error cause could not be determined by the application.");
 
   let payload = panic_info.payload().downcast_ref::<&str>();
   if let Some(payload) = payload {
@@ -194,7 +204,8 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
     None => expl.push_str("Panic location unknown.\n"),
   }
 
-  let report = Report::new(&meta.name, &meta.version, Method::Panic, expl);
+  let report =
+    Report::new(&meta.name, &meta.version, Method::Panic, expl, cause);
 
   match report.persist() {
     Ok(f) => Some(f),
