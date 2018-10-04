@@ -126,7 +126,6 @@ macro_rules! setup_panic {
   };
 }
 
-
 /// Utility function that prints a message to our human users
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
@@ -188,7 +187,8 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   };
 
   #[cfg(not(feature = "nightly"))]
-  let cause = String::from("Error cause could not be determined by the application.");
+  let cause =
+    String::from("Error cause could not be determined by the application.");
 
   let payload = panic_info.payload().downcast_ref::<&str>();
   if let Some(payload) = payload {
@@ -204,7 +204,8 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
     None => expl.push_str("Panic location unknown.\n"),
   }
 
-  let report = Report::new(&meta.name, &meta.version, Method::Panic, expl, cause);
+  let report =
+    Report::new(&meta.name, &meta.version, Method::Panic, expl, cause);
 
   match report.persist() {
     Ok(f) => Some(f),
