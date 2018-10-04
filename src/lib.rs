@@ -1,5 +1,4 @@
-//! Panic message
-//! #[cfg(feature = "nightly")]s for humans
+//! Panic messages for humans
 //!
 //! Handles panics by calling
 //! [`std::panic::set_hook`](https://doc.rust-lang.org/std/panic/fn.set_hook.html)
@@ -103,7 +102,6 @@ macro_rules! setup_panic {
       let file_path = handle_dump(&$meta, info);
 
       print_msg(file_path, &$meta)
-      #[cfg(feature = "nightly")]
         .expect("human-panic: printing error message to console failed");
     }));
   };
@@ -123,7 +121,6 @@ macro_rules! setup_panic {
       let file_path = handle_dump(&meta, info);
 
       print_msg(file_path, &meta)
-      #[cfg(feature = "nightly")]
         .expect("human-panic: printing error message to console failed");
     }));
   };
@@ -131,7 +128,6 @@ macro_rules! setup_panic {
 
 
 /// Utility function that prints a message to our human users
-#[cfg(feature = "nightly")]
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
