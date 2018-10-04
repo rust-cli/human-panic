@@ -94,35 +94,51 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
+    #[allow(unused_imports)]
+    use $crate::{handle_dump, print_msg, Metadata};
+    #[allow(unused_imports)]
     use std::panic::{self, PanicInfo};
     use $crate::{handle_dump, print_msg, Metadata};
 
-    panic::set_hook(Box::new(move |info: &PanicInfo| {
-      let file_path = handle_dump(&$meta, info);
-
-      print_msg(file_path, &$meta)
-        .expect("human-panic: printing error message to console failed");
-    }));
+    #[cfg(not(debug_assertions))]
+    match ::std::env::var("RUST_BACKTRACE") {
+      Err(_) => {
+        panic::set_hook(Box::new(move |info: &PanicInfo| {
+          let file_path = handle_dump(&$meta, info);
+          print_msg(file_path, &$meta)
+            .expect("human-panic: printing error message to console failed");
+        }));
+      },
+      Ok(_) => {},
+    }
   };
 
   () => {
+    #[allow(unused_imports)]
+    use $crate::{handle_dump, print_msg, Metadata};
+    #[allow(unused_imports)]
     use std::panic::{self, PanicInfo};
     use $crate::{handle_dump, print_msg, Metadata};
 
-    let meta = Metadata {
-      version: env!("CARGO_PKG_VERSION").into(),
-      name: env!("CARGO_PKG_NAME").into(),
-      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
-      homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-    };
+    #[cfg(not(debug_assertions))]
+    match ::std::env::var("RUST_BACKTRACE") {
+      Err(_) => {
+        let meta = Metadata {
+          version: env!("CARGO_PKG_VERSION").into(),
+          name: env!("CARGO_PKG_NAME").into(),
+          authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
+          homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+        };
 
-    panic::set_hook(Box::new(move |info: &PanicInfo| {
-      let file_path = handle_dump(&meta, info);
-
-      print_msg(file_path, &meta)
-        .expect("human-panic: printing error message to console failed");
-    }));
-  };
+        panic::set_hook(Box::new(move |info: &PanicInfo| {
+          let file_path = handle_dump(&meta, info);
+          print_msg(file_path, &meta)
+            .expect("human-panic: printing error message to console failed");
+        }));
+      },
+      Ok(_) => {},
+    }
+  }
 }
 
 /// Utility function that prints a message to our human users
