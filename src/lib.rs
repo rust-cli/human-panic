@@ -192,7 +192,7 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   };
 
   #[cfg(not(feature = "nightly"))]
-  let cause = String::from("Not supported by application");
+  let cause = String::from("Error cause could not be determined by the application.");
 
   let payload = panic_info.payload().downcast_ref::<&str>();
   if let Some(payload) = payload {
