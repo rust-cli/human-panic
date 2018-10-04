@@ -95,9 +95,8 @@ pub struct Metadata {
 macro_rules! setup_panic {
   ($meta:expr) => {
     #[allow(unused_imports)]
-    use $crate::{handle_dump, print_msg, Metadata};
-    #[allow(unused_imports)]
     use std::panic::{self, PanicInfo};
+    #[allow(unused_imports)]
     use $crate::{handle_dump, print_msg, Metadata};
 
     #[cfg(not(debug_assertions))]
@@ -108,16 +107,15 @@ macro_rules! setup_panic {
           print_msg(file_path, &$meta)
             .expect("human-panic: printing error message to console failed");
         }));
-      },
-      Ok(_) => {},
+      }
+      Ok(_) => {}
     }
   };
 
   () => {
     #[allow(unused_imports)]
-    use $crate::{handle_dump, print_msg, Metadata};
-    #[allow(unused_imports)]
     use std::panic::{self, PanicInfo};
+    #[allow(unused_imports)]
     use $crate::{handle_dump, print_msg, Metadata};
 
     #[cfg(not(debug_assertions))]
@@ -135,10 +133,10 @@ macro_rules! setup_panic {
           print_msg(file_path, &meta)
             .expect("human-panic: printing error message to console failed");
         }));
-      },
-      Ok(_) => {},
+      }
+      Ok(_) => {}
     }
-  }
+  };
 }
 
 /// Utility function that prints a message to our human users

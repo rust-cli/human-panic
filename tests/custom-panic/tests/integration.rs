@@ -23,4 +23,3 @@ fn debug() {
     .fails_with(101)
     .unwrap();
 }
-
