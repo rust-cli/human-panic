@@ -94,8 +94,8 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! setup_panic {
   ($meta:expr) => {
-    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, print_msg, Metadata};
 
     panic::set_hook(Box::new(move |info: &PanicInfo| {
       let file_path = handle_dump(&$meta, info);
@@ -106,8 +106,8 @@ macro_rules! setup_panic {
   };
 
   () => {
-    use $crate::{handle_dump, print_msg, Metadata};
     use std::panic::{self, PanicInfo};
+    use $crate::{handle_dump, print_msg, Metadata};
 
     let meta = Metadata {
       version: env!("CARGO_PKG_VERSION").into(),
