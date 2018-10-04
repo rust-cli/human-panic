@@ -10,8 +10,7 @@
 //! pretty great at safety, it's not unheard of to access the wrong index in a
 //! vector or have an assert fail somewhere.
 //!
-//! When an error eventually occurs, you proba
-//! #[cfg(feature = "nightly")]bly will want to know about it. So
+//! When an error eventually occurs, you probably will want to know about it. So
 //! instead of just providing an error message on the command line, we can create a
 //! call to action for people to submit a report.
 //!
@@ -76,8 +75,7 @@ pub struct Metadata {
 
 /// `human-panic` initialisation macro
 ///
-/// You can either call this macro with no arguments `setup_pan
-/// #[cfg(feature = "nightly")]ic!()` or
+/// You can either call this macro with no arguments `setup_panic!()` or
 /// with a Metadata struct, if you don't want the error message to display
 /// the values used in your `Cargo.toml` file.
 ///
@@ -132,7 +130,8 @@ macro_rules! setup_panic {
 }
 
 
-#[cfg(feature = "nightly")]/// Utility function that prints a message to our human users
+/// Utility function that prints a message to our human users
+#[cfg(feature = "nightly")]
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
