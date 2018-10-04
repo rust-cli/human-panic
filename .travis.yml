@@ -2,14 +2,14 @@ language: rust
 rust:
   - stable
   - beta
+  - 1.25.0
 script: |
   cargo build --verbose &&
   cargo test  --verbose --all
 matrix: # additional tests
   include:
   - rust: nightly
-    script: |
-       cargo test --all --features nightly
+    script: cargo test --all --features nightly
   - rust: 1.29.1
     env: CLIPPY=YESPLEASE
     before_script: rustup component add clippy-preview
