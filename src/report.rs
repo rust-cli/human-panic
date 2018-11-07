@@ -9,6 +9,8 @@ use self::failure::Error;
 use self::uuid::Uuid;
 use backtrace::Backtrace;
 use std::borrow::Cow;
+use std::fmt::Write as FmtWrite;
+use std::mem;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 
 /// Method of failure.
@@ -44,7 +46,50 @@ impl Report {
       format!("unix:{:?}", platform.os_type).into()
     };
 
-    let backtrace = format!("{:#?}", Backtrace::new());
+    //We skip non-user code frames, including Backtrace::new()
+    const SKIP_FRAMES_NUM: usize = 8;
+    //Code is based on backtrace source
+    const HEX_WIDTH: usize = mem::size_of::<usize>() * 2 + 2;
+
+    let mut backtrace = String::new();
+
+    for (idx, frame) in Backtrace::new()
+      .frames()
+      .iter()
+      .skip(SKIP_FRAMES_NUM)
+      .enumerate()
+    {
+      let ip = frame.ip();
+      let _ = write!(backtrace, "\n{:4}: {:2$?}", idx, ip, HEX_WIDTH);
+
+      let symbols = frame.symbols();
+      if symbols.len() == 0 {
+        let _ = write!(backtrace, " - <unresolved>");
+      }
+
+      for (idx, symbol) in symbols.iter().enumerate() {
+        if idx != 0 {
+          let _ = write!(backtrace, "\n      {:1$}", "", HEX_WIDTH);
+        }
+
+        if let Some(name) = symbol.name() {
+          let _ = write!(backtrace, " - {}", name);
+        } else {
+          let _ = write!(backtrace, " - <unknown>");
+        }
+
+        if let (Some(file), Some(line)) = (symbol.filename(), symbol.lineno()) {
+          let _ = write!(
+            backtrace,
+            "\n      {:3$}at {}:{}",
+            "",
+            file.display(),
+            line,
+            HEX_WIDTH
+          );
+        }
+      }
+    }
 
     Self {
       crate_version: version.into(),
