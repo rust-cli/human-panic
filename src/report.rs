@@ -46,13 +46,25 @@ impl Report {
       format!("unix:{:?}", platform.os_type).into()
     };
 
-    //We skip non-user code frames, including Backtrace::new()
+    //We skip 3 frames from backtrace library
+    //Then we skip 3 frames for our own library
+    //(including closure that we set as hook)
+    //Then we skip 2 functions from Rust's runtime
+    //that calls panic hook
     const SKIP_FRAMES_NUM: usize = 8;
-    //Code is based on backtrace source
-    const HEX_WIDTH: usize = mem::size_of::<usize>() * 2 + 2;
+    //We take padding for address and extra two letters
+    //to padd after index.
+    const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
+    //Padding for next lines after frame's address
+    const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
 
     let mut backtrace = String::new();
 
+    //Here we iterate over backtrace frames
+    //(each corresponds to function's stack)
+    //We need to print its address
+    //and symbol(e.g. function name),
+    //if it is available
     for (idx, frame) in Backtrace::new()
       .frames()
       .iter()
@@ -63,13 +75,17 @@ impl Report {
       let _ = write!(backtrace, "\n{:4}: {:2$?}", idx, ip, HEX_WIDTH);
 
       let symbols = frame.symbols();
-      if symbols.len() == 0 {
+      if symbols.is_empty() {
         let _ = write!(backtrace, " - <unresolved>");
+        continue;
       }
 
       for (idx, symbol) in symbols.iter().enumerate() {
+        //Print symbols from this address,
+        //if there are several addresses
+        //we need to put it on next line
         if idx != 0 {
-          let _ = write!(backtrace, "\n      {:1$}", "", HEX_WIDTH);
+          let _ = write!(backtrace, "\n{:1$}", "", NEXT_SYMBOL_PADDING);
         }
 
         if let Some(name) = symbol.name() {
@@ -78,14 +94,15 @@ impl Report {
           let _ = write!(backtrace, " - <unknown>");
         }
 
+        //See if there is debug information with file name and line
         if let (Some(file), Some(line)) = (symbol.filename(), symbol.lineno()) {
           let _ = write!(
             backtrace,
-            "\n      {:3$}at {}:{}",
+            "\n{:3$}at {}:{}",
             "",
             file.display(),
             line,
-            HEX_WIDTH
+            NEXT_SYMBOL_PADDING
           );
         }
       }
