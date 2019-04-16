@@ -51,7 +51,7 @@ extern crate failure;
 extern crate serde_derive;
 extern crate termcolor;
 
-mod report;
+pub mod report;
 use report::{Method, Report};
 
 use std::borrow::Cow;
