@@ -1,3 +1,8 @@
+//! This module encapsulates the report of a failure event.
+//!
+//! A `Report` contains the metadata collected about the event
+//! to construct a helpful error message.
+
 extern crate failure;
 extern crate os_type;
 extern crate serde;
@@ -16,9 +21,14 @@ use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 /// Method of failure.
 #[derive(Debug, Serialize, Clone, Copy)]
 pub enum Method {
+  /// Failure caused by a panic.
   Panic,
 }
 
+/// Contains metadata about the crash like the backtrace and
+/// information about the crate and operating system. Can
+/// be used to be serialized and persisted or printed as
+/// information to the user.
 #[derive(Debug, Serialize)]
 pub struct Report {
   name: String,
@@ -119,6 +129,7 @@ impl Report {
     }
   }
 
+  /// Serialize the `Report` to a TOML string.
   pub fn serialize(&self) -> Option<String> {
     toml::to_string_pretty(&self).ok()
   }
