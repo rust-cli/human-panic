@@ -10,6 +10,7 @@ authors = ["Yoshua Wuyts <yoshuawuyts@gmail.com>",
            "Pascal Hertleif <killercup@gmail.com>",
            "Katharina Fey <kookie@spacekookie.de>"]
 readme = "README.md"
+edition = "2018"
 
 [package.metadata.docs.rs]
 features = ["nightly"]
