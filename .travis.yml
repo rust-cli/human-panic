@@ -10,11 +10,11 @@ matrix: # additional tests
   include:
   - rust: nightly
     script: cargo test --all --features nightly
-  - rust: 1.29.1
+  - rust: 1.35.0
     env: CLIPPY=YESPLEASE
     before_script: rustup component add clippy-preview
     script: cargo clippy --all -- -D warnings
-  - rust: 1.29.1
+  - rust: 1.35.0
     env: RUSTFMT=YESPLEASE
     before_script: rustup component add rustfmt-preview
     script: cargo fmt --all -- --check
