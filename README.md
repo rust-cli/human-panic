@@ -92,8 +92,7 @@ stack backtrace:
 ## Usage
 
 ```rust no_run
-#[macro_use]
-extern crate human_panic;
+use human_panic::setup_panic;
 
 fn main() {
    setup_panic!();

@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate human_panic;
+use human_panic::setup_panic;
 
 fn main() {
   setup_panic!(Metadata {
