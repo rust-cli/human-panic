@@ -2,7 +2,8 @@ language: rust
 rust:
   - stable
   - beta
-  - 1.25.0
+  # Minimum supported Rust version (msrv)
+  - 1.32.0
 script: |
   cargo build --verbose &&
   cargo test  --verbose --all
