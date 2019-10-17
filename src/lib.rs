@@ -83,7 +83,7 @@ pub struct Metadata {
 /// setup_panic!(Metadata {
 ///     name: env!("CARGO_PKG_NAME").into(),
 ///     version: env!("CARGO_PKG_VERSION").into(),
-///     authors: "My Company Support <support@mycompany.com".into(),
+///     authors: "My Company Support <support@mycompany.com>".into(),
 ///     homepage: "support.mycompany.com".into(),
 ///     repository: "https://git.mycompany.com/repo.git".into(),
 /// });
