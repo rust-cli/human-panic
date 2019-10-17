@@ -1,4 +1,4 @@
-extern crate assert_cli;
+use assert_cli;
 
 #[test]
 fn release() {

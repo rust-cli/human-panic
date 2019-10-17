@@ -3,20 +3,14 @@
 //! A `Report` contains the metadata collected about the event
 //! to construct a helpful error message.
 
-extern crate failure;
-extern crate os_type;
-extern crate serde;
-extern crate tempdir;
-extern crate toml;
-extern crate uuid;
-
-use self::failure::Error;
-use self::uuid::Uuid;
 use backtrace::Backtrace;
+use serde_derive::Serialize;
 use std::borrow::Cow;
+use std::error::Error;
 use std::fmt::Write as FmtWrite;
 use std::mem;
 use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
+use uuid::Uuid;
 
 /// Method of failure.
 #[derive(Debug, Serialize, Clone, Copy)]
@@ -135,15 +129,11 @@ impl Report {
   }
 
   /// Write a file to disk.
-  pub fn persist(&self) -> Result<PathBuf, Error> {
+  pub fn persist(&self) -> Result<PathBuf, Box<dyn Error + 'static>> {
     let uuid = Uuid::new_v4().to_hyphenated().to_string();
     let tmp_dir = env::temp_dir();
-    let tmp_dir = match tmp_dir.to_str() {
-      Some(dir) => dir,
-      None => bail!("Could not create a tmp directory for a report."),
-    };
     let file_name = format!("report-{}.toml", &uuid);
-    let file_path = Path::new(tmp_dir).join(file_name);
+    let file_path = Path::new(&tmp_dir).join(file_name);
     let mut file = File::create(&file_path)?;
     let toml = self.serialize().unwrap();
     file.write_all(toml.as_bytes())?;

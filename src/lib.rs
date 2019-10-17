@@ -45,13 +45,6 @@
 #![cfg_attr(feature = "nightly", feature(external_doc))]
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 
-extern crate backtrace;
-#[macro_use]
-extern crate failure;
-#[macro_use]
-extern crate serde_derive;
-extern crate termcolor;
-
 pub mod report;
 use report::{Method, Report};
 
@@ -84,9 +77,8 @@ pub struct Metadata {
 /// The Metadata struct can't implement `Default` because of orphan rules, which
 /// means you need to provide all fields for initialisation.
 ///
-/// ```ignore
-/// #[macro_use]
-/// extern crate human_panic;
+/// ```
+/// use human_panic::setup_panic;
 ///
 /// setup_panic!(Metadata {
 ///     name: env!("CARGO_PKG_NAME").into(),
