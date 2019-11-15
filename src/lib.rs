@@ -199,14 +199,22 @@ pub fn print_msg<P: AsRef<Path>>(
 /// Utility function which will handle dumping information to disk
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   let mut expl = String::new();
+
   #[cfg(feature = "nightly")]
-  let message = panic_info.message();
+  let message = panic_info.message().map(|m| format!("{}", m));
 
   #[cfg(not(feature = "nightly"))]
-  let message = panic_info.payload().downcast_ref::<&str>();
+  let message = match (
+    panic_info.payload().downcast_ref::<&str>(),
+    panic_info.payload().downcast_ref::<String>(),
+  ) {
+    (Some(s), _) => Some(s.to_string()),
+    (_, Some(s)) => Some(s.to_string()),
+    (None, None) => None,
+  };
 
   let cause = match message {
-    Some(m) => format!("{}", m),
+    Some(m) => m,
     None => "Unknown".into(),
   };
 
