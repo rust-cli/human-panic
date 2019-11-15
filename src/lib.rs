@@ -200,19 +200,15 @@ pub fn print_msg<P: AsRef<Path>>(
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
   let mut expl = String::new();
   #[cfg(feature = "nightly")]
-  let cause = match panic_info.message() {
+  let message = panic_info.message();
+
+  #[cfg(not(feature = "nightly"))]
+  let message = panic_info.payload().downcast_ref::<&str>();
+
+  let cause = match message {
     Some(m) => format!("{}", m),
     None => "Unknown".into(),
   };
-
-  #[cfg(not(feature = "nightly"))]
-  let cause =
-    String::from("Error cause could not be determined by the application.");
-
-  let payload = panic_info.payload().downcast_ref::<&str>();
-  if let Some(payload) = payload {
-    expl.push_str(&format!("Cause: {}. ", &payload));
-  }
 
   match panic_info.location() {
     Some(location) => expl.push_str(&format!(
