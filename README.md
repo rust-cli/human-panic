@@ -113,8 +113,8 @@ $ cargo add human-panic
 
 [1]: https://img.shields.io/crates/v/human-panic.svg?style=flat-square
 [2]: https://crates.io/crates/human-panic
-[3]: https://img.shields.io/travis/rust-clique/human-panic.svg?style=flat-square
-[4]: https://travis-ci.org/rust-clique/human-panic
+[3]: https://img.shields.io/travis/rust-cli/human-panic.svg?style=flat-square
+[4]: https://travis-ci.org/rust-cli/human-panic
 [5]: https://img.shields.io/crates/d/human-panic.svg?style=flat-square
 [6]: https://crates.io/crates/human-panic
 [7]: https://docs.rs/human-panic/badge.svg
