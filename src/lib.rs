@@ -35,7 +35,6 @@
 //!
 //! - Homepage: https://github.com/yoshuawuyts/human-panic
 //! - Authors: Yoshua Wuyts <yoshuawuyts@gmail.com>
-//! - Repository: https://github.com/yoshuawuyts/human-panic
 //!
 //! We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
 //!
@@ -64,8 +63,6 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
-  /// The URL of the crate's repository
-  pub repository: Cow<'static, str>,
 }
 
 /// `human-panic` initialisation macro
@@ -85,7 +82,6 @@ pub struct Metadata {
 ///     version: env!("CARGO_PKG_VERSION").into(),
 ///     authors: "My Company Support <support@mycompany.com>".into(),
 ///     homepage: "support.mycompany.com".into(),
-///     repository: "https://git.mycompany.com/repo.git".into(),
 /// });
 /// ```
 #[macro_export]
@@ -123,7 +119,6 @@ macro_rules! setup_panic {
           name: env!("CARGO_PKG_NAME").into(),
           authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
           homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-          repository: option_env!("CARGO_PKG_REPOSITORY").unwrap_or("").into(),
         };
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -142,13 +137,8 @@ pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage, repository) = (
-    &meta.version,
-    &meta.name,
-    &meta.authors,
-    &meta.homepage,
-    &meta.repository,
-  );
+  let (_version, name, authors, homepage) =
+    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
@@ -178,9 +168,6 @@ pub fn print_msg<P: AsRef<Path>>(
   }
   if !authors.is_empty() {
     writeln!(&mut buffer, "- Authors: {}", authors)?;
-  }
-  if !repository.is_empty() {
-    writeln!(&mut buffer, "- Repository: {}", repository)?;
   }
   writeln!(
     &mut buffer,
