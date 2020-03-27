@@ -102,6 +102,12 @@ fn main() {
 }
 ```
 
+It only displays a human-friendly panic message in release mode:
+
+```sh
+$ cargo run --release
+```
+
 ## Installation
 
 ```sh
