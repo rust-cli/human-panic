@@ -5,7 +5,6 @@
 
 use backtrace::Backtrace;
 use serde_derive::Serialize;
-use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::Write as FmtWrite;
 use std::mem;
@@ -26,7 +25,7 @@ pub enum Method {
 #[derive(Debug, Serialize)]
 pub struct Report {
   name: String,
-  operating_system: Cow<'static, str>,
+  operating_system: String,
   crate_version: String,
   explanation: String,
   cause: String,
@@ -43,12 +42,7 @@ impl Report {
     explanation: String,
     cause: String,
   ) -> Self {
-    let operating_system = if cfg!(windows) {
-      "windows".into()
-    } else {
-      let platform = os_type::current_platform();
-      format!("unix:{:?}", platform.os_type).into()
-    };
+    let operating_system = os_info::get().to_string();
 
     //We skip 3 frames from backtrace library
     //Then we skip 3 frames for our own library
