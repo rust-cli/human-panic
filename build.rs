@@ -5,7 +5,7 @@ fn main() {
     // Cargo passes its binary path as the environment variable CARGO.
     let cargo_path = env!("CARGO");
     let command = Command::new(cargo_path)
-        .arg("version")
+        .arg("-vV")
         .stdout(Stdio::piped())
         .spawn();
     if let Ok(command) = command {
