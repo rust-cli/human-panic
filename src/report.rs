@@ -31,7 +31,7 @@ pub struct Report {
   cause: String,
   method: Method,
   backtrace: String,
-  cargo_version: String
+  rustc_version: String
 }
 
 impl Report {
@@ -43,7 +43,7 @@ impl Report {
     explanation: String,
     cause: String,
   ) -> Self {
-    let cargo_version = env!("CARGO_VERSION").to_string().replace("\\n", "\n");
+    let rustc_version = env!("RUSTC_VERSION").to_string().replace("\\n", "\n");
     let operating_system = os_info::get().to_string();
 
     //We skip 3 frames from backtrace library
@@ -116,7 +116,7 @@ impl Report {
       explanation,
       cause,
       backtrace,
-      cargo_version
+      rustc_version
     }
   }
 

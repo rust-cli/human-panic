@@ -2,9 +2,9 @@ use std::process::{Command, Stdio};
 
 fn main() {
     let mut version = String::new();
-    // Cargo passes its binary path as the environment variable CARGO.
-    let cargo_path = env!("CARGO");
-    let command = Command::new(cargo_path)
+    // Cargo passes rustc's binary path as the environment variable RUSTC
+    let rustc_path = std::env::var("RUSTC").unwrap();
+    let command = Command::new(rustc_path)
         .arg("-vV")
         .stdout(Stdio::piped())
         .spawn();
@@ -17,5 +17,5 @@ fn main() {
                 .to_string();
         }
     }
-    println!("cargo:rustc-env=CARGO_VERSION={}", version);
+    println!("cargo:rustc-env=RUSTC_VERSION={}", version);
 }
