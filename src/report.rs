@@ -43,7 +43,7 @@ impl Report {
     explanation: String,
     cause: String,
   ) -> Self {
-    let cargo_version = env!("CARGO_VERSION").to_string();
+    let cargo_version = env!("CARGO_VERSION").to_string().replace("\\n", "\n");
     let operating_system = os_info::get().to_string();
 
     //We skip 3 frames from backtrace library

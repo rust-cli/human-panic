@@ -13,6 +13,7 @@ fn main() {
         if let Ok(output) = output {
             version = String::from_utf8_lossy(&output.stdout)
                 .trim()
+                .replace("\n", "\\n")
                 .to_string();
         }
     }
