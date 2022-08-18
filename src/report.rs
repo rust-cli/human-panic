@@ -31,6 +31,7 @@ pub struct Report {
   cause: String,
   method: Method,
   backtrace: String,
+  cargo_version: String
 }
 
 impl Report {
@@ -42,6 +43,7 @@ impl Report {
     explanation: String,
     cause: String,
   ) -> Self {
+    let cargo_version = env!("CARGO_VERSION").to_string();
     let operating_system = os_info::get().to_string();
 
     //We skip 3 frames from backtrace library
@@ -114,6 +116,7 @@ impl Report {
       explanation,
       cause,
       backtrace,
+      cargo_version
     }
   }
 
