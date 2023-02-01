@@ -131,6 +131,7 @@ macro_rules! setup_panic {
 }
 
 /// Utility function that prints a message to our human users
+#[cfg(feature = "color")]
 pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
@@ -153,6 +154,18 @@ pub fn print_msg<P: AsRef<Path>>(
   buffer.reset()?;
 
   stderr.print(&buffer).unwrap();
+  Ok(())
+}
+
+#[cfg(not(feature = "color"))]
+pub fn print_msg<P: AsRef<Path>>(
+  file_path: Option<P>,
+  meta: &Metadata,
+) -> IoResult<()> {
+  let mut buffer = std::io::stderr();
+
+  write_msg(&mut buffer, file_path, meta)?;
+
   Ok(())
 }
 
