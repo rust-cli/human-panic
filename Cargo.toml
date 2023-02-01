@@ -26,7 +26,7 @@ include = [
 ]
 
 [package.metadata.docs.rs]
-features = ["nightly"]
+all-features = true
 
 [package.metadata.release]
 pre-release-replacements = [
@@ -42,6 +42,7 @@ nightly = []
 
 [dependencies]
 termcolor = "1.0.4"
+concolor = { version = "0.0.11", features = ["auto"] }
 uuid = { version = "0.8.0", features = ["v4"], default-features = false }
 serde_derive = "1.0.79"
 toml = "0.5.0"
