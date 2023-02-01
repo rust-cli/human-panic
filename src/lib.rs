@@ -105,9 +105,9 @@ macro_rules! setup_panic {
     #[allow(unused_imports)]
     use $crate::{handle_dump, print_msg, Metadata};
 
-    #[cfg(not(debug_assertions))]
-    match ::std::env::var("RUST_BACKTRACE") {
-      Err(_) => {
+    match $crate::PanicStyle::default() {
+      $crate::PanicStyle::Debug => {}
+      $crate::PanicStyle::Human => {
         let meta = $meta;
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -116,13 +116,34 @@ macro_rules! setup_panic {
             .expect("human-panic: printing error message to console failed");
         }));
       }
-      Ok(_) => {}
     }
   };
 
   () => {
     $crate::setup_panic!($crate::metadata!());
   };
+}
+
+/// Style of panic to be used
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub enum PanicStyle {
+  /// Normal panic
+  Debug,
+  /// Human-formatted panic
+  Human,
+}
+
+impl Default for PanicStyle {
+  fn default() -> Self {
+    if cfg!(debug_assertions) {
+      PanicStyle::Debug
+    } else {
+      match ::std::env::var("RUST_BACKTRACE") {
+        Ok(_) => PanicStyle::Debug,
+        Err(_) => PanicStyle::Human,
+      }
+    }
+  }
 }
 
 /// Utility function that prints a message to our human users
