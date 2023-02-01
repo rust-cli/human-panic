@@ -52,6 +52,8 @@ use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
 /// A convenient metadata struct that describes a crate
+///
+/// See [`metadata!`]
 pub struct Metadata {
   /// The crate version
   pub version: Cow<'static, str>,
@@ -61,6 +63,19 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
+}
+
+/// Initialize [`Metadata`]
+#[macro_export]
+macro_rules! metadata {
+  () => {
+    Metadata {
+      version: env!("CARGO_PKG_VERSION").into(),
+      name: env!("CARGO_PKG_NAME").into(),
+      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
+      homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+    }
+  };
 }
 
 /// `human-panic` initialisation macro
@@ -112,12 +127,7 @@ macro_rules! setup_panic {
     #[cfg(not(debug_assertions))]
     match ::std::env::var("RUST_BACKTRACE") {
       Err(_) => {
-        let meta = Metadata {
-          version: env!("CARGO_PKG_VERSION").into(),
-          name: env!("CARGO_PKG_NAME").into(),
-          authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
-          homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-        };
+        let meta = $crate::metadata!();
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
           let file_path = handle_dump(&meta, info);
