@@ -1,7 +1,7 @@
 #[test]
 #[cfg_attr(debug_assertions, ignore)]
 fn release() {
-  snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
+    snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
     .assert()
     .stderr_matches(
       "\
@@ -24,11 +24,13 @@ Thank you kindly!
 #[test]
 #[cfg_attr(not(debug_assertions), ignore)]
 fn debug() {
-  snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
-    .assert()
-    .stderr_matches("\
+    snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
+        .assert()
+        .stderr_matches(
+            "\
 thread 'main' panicked at 'OMG EVERYTHING IS ON FIRE!!!', tests/single-panic/src/main.rs:7:3
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-")
-    .code(101);
+",
+        )
+        .code(101);
 }
