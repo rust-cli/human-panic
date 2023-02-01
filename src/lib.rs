@@ -108,26 +108,7 @@ macro_rules! setup_panic {
     #[cfg(not(debug_assertions))]
     match ::std::env::var("RUST_BACKTRACE") {
       Err(_) => {
-        panic::set_hook(Box::new(move |info: &PanicInfo| {
-          let file_path = handle_dump(&$meta, info);
-          print_msg(file_path, &$meta)
-            .expect("human-panic: printing error message to console failed");
-        }));
-      }
-      Ok(_) => {}
-    }
-  };
-
-  () => {
-    #[allow(unused_imports)]
-    use std::panic::{self, PanicInfo};
-    #[allow(unused_imports)]
-    use $crate::{handle_dump, print_msg, Metadata};
-
-    #[cfg(not(debug_assertions))]
-    match ::std::env::var("RUST_BACKTRACE") {
-      Err(_) => {
-        let meta = $crate::metadata!();
+        let meta = $meta;
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
           let file_path = handle_dump(&meta, info);
@@ -137,6 +118,10 @@ macro_rules! setup_panic {
       }
       Ok(_) => {}
     }
+  };
+
+  () => {
+    $crate::setup_panic!($crate::metadata!());
   };
 }
 
