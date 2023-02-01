@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["Human Panic Authors <human-panic-crate@example.com>"]
 edition = "2018"
 
+[package.metadata.release]
+release = false
+
 [dependencies]
 human-panic = { path = "../.." }
 
