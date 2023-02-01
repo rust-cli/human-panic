@@ -1,4 +1,14 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
+and this project adheres to [Semantic Versioning](http://semver.org/).
+
+<!-- next-header -->
+## [Unreleased] - ReleaseDate
+
 ## 2018-04-18, Version 0.3.0
+
 ### Commits
 - [[`650df0bf4d`](https://github.com/yoshuawuyts/human-panic/commits/650df0bf4de62239e9592b2185ebbd4875640864)] (cargo-release) version 0.3.0 (Yoshua Wuyts)
 - [[`a3ec0ddb97`](https://github.com/yoshuawuyts/human-panic/commits/a3ec0ddb97eb5940ab56785eb54eed52ead3a82b)] Fixing wrong data in certain crash dump fields (#15)
@@ -7,14 +17,14 @@ Fixing a bug in the log dumps
 
 * Carrying over metadata from first macro call to properly
 include metadata in crash dumps.
-* Making Method derive Copy (Katharina)
+* Making Method derive Copy (Katharina)
 - [[`ed11055e06`](https://github.com/yoshuawuyts/human-panic/commits/ed11055e0602c3c8d223ed8354058fefb9ac47ec)] Merge pull request #16 from killercup/docs
 
 Ensure no docs are missin (Pascal Hertleif)
 - [[`4540d77276`](https://github.com/yoshuawuyts/human-panic/commits/4540d77276eafbfb57c922f57f1aa04cd5cb1cd5)] Fix typos (#14)
 
 * Correct typo embarrasing
-* Fix typos (Andy Slack)
+* Fix typos (Andy Slack)
 - [[`9e972ef654`](https://github.com/yoshuawuyts/human-panic/commits/9e972ef654df70047f73df51befa3ba2bcb2e5c5)] Ensure no docs are missing (Pascal Hertleif)
 - [[`b82ac5c35a`](https://github.com/yoshuawuyts/human-panic/commits/b82ac5c35a9e5772a54033a084d1cc784ffd6510)] Merge pull request #11 from skade/update-readme
 
@@ -82,7 +92,7 @@ This should make it compatible with windows consoles.
 
 and choose a nightly that actually exists.
 
-* Make clippy happy (Pascal Hertleif)
+* Make clippy happy (Pascal Hertleif)
 - [[`c04ae22d1e`](https://github.com/yoshuawuyts/human-panic/commits/c04ae22d1ef3289d028f9ff5aaefd8a44b5c293c)] update readme output (Yoshua Wuyts)
 - [[`4a35c860fd`](https://github.com/yoshuawuyts/human-panic/commits/4a35c860fd00835a36184be8068d777d4fa02519)] upgrade desc (Yoshua Wuyts)
 - [[`ccaf3bce86`](https://github.com/yoshuawuyts/human-panic/commits/ccaf3bce8666879c89ce0222f7f8d1f306bde074)] init (Yoshua Wuyts)
@@ -109,4 +119,5 @@ and choose a nightly that actually exists.
  15 files changed, 442 insertions(+), 281 deletions(-)
 ```
 
-
+<!-- next-url -->
+[Unreleased]: https://github.com/rust-cli/argfile/compare/v1.0.3...HEAD
