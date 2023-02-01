@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Expose `metadata!` constructor
+- Expose `PanicStyle::default()` for knowing which handler to use::
+
+### Fixes
+
+- Detect when color can be used
+- Make color optional (opt-out)
+
 ## [v1.0.3]
 
 ### Features
