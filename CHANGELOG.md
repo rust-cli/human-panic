@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [v1.0.3]
+
+### Features
+
+- *(nightly)* Include original panic
+
+### Fixes
+
+- Use normal panics when `RUST_BACKTRACE` is enabled
+- Skip unnecesary frames in backtrace
+
 ## 2018-04-18, Version 0.3.0
 
 ### Commits
@@ -121,3 +132,4 @@ and choose a nightly that actually exists.
 
 <!-- next-url -->
 [Unreleased]: https://github.com/rust-cli/argfile/compare/v1.0.3...HEAD
+[v1.0.3]: https://github.com/rust-cli/argfile/compare/1.0.1...v1.0.3
