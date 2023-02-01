@@ -41,7 +41,6 @@
 //! Thank you kindly!
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
-#![cfg_attr(feature = "nightly", feature(external_doc))]
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 
 pub mod report;
@@ -147,9 +146,8 @@ pub fn print_msg<P: AsRef<Path>>(
   writeln!(&mut buffer, "Well, this is embarrassing.\n")?;
   writeln!(
     &mut buffer,
-    "{} had a problem and crashed. To help us diagnose the \
-     problem you can send us a crash report.\n",
-    name
+    "{name} had a problem and crashed. To help us diagnose the \
+     problem you can send us a crash report.\n"
   )?;
   writeln!(
     &mut buffer,
@@ -164,10 +162,10 @@ pub fn print_msg<P: AsRef<Path>>(
   )?;
 
   if !homepage.is_empty() {
-    writeln!(&mut buffer, "- Homepage: {}", homepage)?;
+    writeln!(&mut buffer, "- Homepage: {homepage}")?;
   }
   if !authors.is_empty() {
-    writeln!(&mut buffer, "- Authors: {}", authors)?;
+    writeln!(&mut buffer, "- Authors: {authors}")?;
   }
   writeln!(
     &mut buffer,

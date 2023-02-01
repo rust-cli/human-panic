@@ -20,10 +20,10 @@ include metadata in crash dumps.
 * Making Method derive Copy (Katharina)
 - [[`ed11055e06`](https://github.com/yoshuawuyts/human-panic/commits/ed11055e0602c3c8d223ed8354058fefb9ac47ec)] Merge pull request #16 from killercup/docs
 
-Ensure no docs are missin (Pascal Hertleif)
+Ensure no docs are missing (Pascal Hertleif)
 - [[`4540d77276`](https://github.com/yoshuawuyts/human-panic/commits/4540d77276eafbfb57c922f57f1aa04cd5cb1cd5)] Fix typos (#14)
 
-* Correct typo embarrasing
+* Correct typo embarrassing
 * Fix typos (Andy Slack)
 - [[`9e972ef654`](https://github.com/yoshuawuyts/human-panic/commits/9e972ef654df70047f73df51befa3ba2bcb2e5c5)] Ensure no docs are missing (Pascal Hertleif)
 - [[`b82ac5c35a`](https://github.com/yoshuawuyts/human-panic/commits/b82ac5c35a9e5772a54033a084d1cc784ffd6510)] Merge pull request #11 from skade/update-readme
@@ -46,7 +46,7 @@ Rollup (Pascal Hertleif)
 - [[`31e1d9ada2`](https://github.com/yoshuawuyts/human-panic/commits/31e1d9ada2b3e0563cac37d32ec952552e129281)] Cleaning up warnings for the big rebase (Katharina Sabel)
 - [[`3ffa055d57`](https://github.com/yoshuawuyts/human-panic/commits/3ffa055d576c8e572ddcde2744d5aef514b11fa5)] Attempting to fix the `err` example using the failures crate (Katharina Sabel)
 - [[`5214754bc0`](https://github.com/yoshuawuyts/human-panic/commits/5214754bc093a389a7d44c5fd1e9d6d38df1ea86)] Adding a bit of padding in the log (Katharina Sabel)
-- [[`031b2b846b`](https://github.com/yoshuawuyts/human-panic/commits/031b2b846b73e6fefa783ffee83c9c5ef6464c3a)] Merging advaned report functionality. (Katharina Sabel)
+- [[`031b2b846b`](https://github.com/yoshuawuyts/human-panic/commits/031b2b846b73e6fefa783ffee83c9c5ef6464c3a)] Merging advanced report functionality. (Katharina Sabel)
 - [[`7a2e923075`](https://github.com/yoshuawuyts/human-panic/commits/7a2e9230751abd3a152d3240a8b4c75891ae8e41)] Merging #4 by yoshuawuyts
 
 This commit adds the ability to generate reports based on an application
@@ -63,7 +63,7 @@ into a macro.
 
 Optionally the two core functions (print_help and dump_log) can now also be used
 without the core macro, because they are `pub fn` (Katharina Sabel)
-- [[`b90ea3ba1c`](https://github.com/yoshuawuyts/human-panic/commits/b90ea3ba1cda64f65928f36429da67523e78dcfb)] Stable and slim (#1)
+- Stable and slim (#1)
 
 * Make it compile on stable
 

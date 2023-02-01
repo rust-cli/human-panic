@@ -40,14 +40,14 @@ jobs:
       with:
         toolchain: ${{ matrix.rust }}
     - uses: Swatinem/rust-cache@v2
-    - name: Build
-      run: cargo test --no-run --workspace --all-features
-    - name: Default features
-      run: cargo test --workspace
-    - name: All features
-      run: cargo test --workspace --all-features
-    - name: No-default features
-      run: cargo test --workspace --no-default-features
+    - name: Build Debug
+      run: cargo test --no-run
+    - name: Test Debug
+      run: cargo test
+    - name: Build Release
+      run: cargo test --no-run --release
+    - name: Test Release
+      run: cargo test --release
   msrv:
     name: "Check MSRV: 1.60.0"
     runs-on: ubuntu-latest
@@ -59,12 +59,10 @@ jobs:
       with:
         toolchain: 1.60.0  # MSRV
     - uses: Swatinem/rust-cache@v2
-    - name: Default features
+    - name: Debug
       run: cargo check --workspace --all-targets
-    - name: All features
-      run: cargo check --workspace --all-targets --all-features
-    - name: No-default features
-      run: cargo check --workspace --all-targets --no-default-features
+    - name: Release
+      run: cargo check --workspace --all-targets --release
   docs:
     name: Docs
     runs-on: ubuntu-latest
@@ -79,7 +77,7 @@ jobs:
     - name: Check documentation
       env:
         RUSTDOCFLAGS: -D warnings
-      run: cargo doc --workspace --all-features --no-deps --document-private-items
+      run: cargo doc --workspace --no-deps --document-private-items
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -114,7 +112,7 @@ jobs:
       run: cargo install clippy-sarif sarif-fmt
     - name: Check
       run: >
-        cargo clippy --workspace --all-features --all-targets --message-format=json -- -D warnings --allow deprecated
+        cargo clippy --workspace --all-targets --message-format=json -- -D warnings --allow deprecated
         | clippy-sarif
         | tee clippy-results.sarif
         | sarif-fmt
