@@ -47,10 +47,9 @@ pub mod report;
 use report::{Method, Report};
 
 use std::borrow::Cow;
-use std::io::{Result as IoResult, Write};
+use std::io::Result as IoResult;
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
-use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
 
 /// A convenient metadata struct that describes a crate
 pub struct Metadata {
@@ -132,25 +131,60 @@ macro_rules! setup_panic {
 }
 
 /// Utility function that prints a message to our human users
+#[cfg(feature = "color")]
 pub fn print_msg<P: AsRef<Path>>(
+  file_path: Option<P>,
+  meta: &Metadata,
+) -> IoResult<()> {
+  use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
+
+  let stderr_support = concolor::get(concolor::Stream::Stdout);
+  let choice = if stderr_support.color() {
+    ColorChoice::Always
+  } else {
+    ColorChoice::Never
+  };
+
+  let stderr = BufferWriter::stderr(choice);
+  let mut buffer = stderr.buffer();
+  buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
+
+  write_msg(&mut buffer, file_path, meta)?;
+
+  buffer.reset()?;
+
+  stderr.print(&buffer).unwrap();
+  Ok(())
+}
+
+#[cfg(not(feature = "color"))]
+pub fn print_msg<P: AsRef<Path>>(
+  file_path: Option<P>,
+  meta: &Metadata,
+) -> IoResult<()> {
+  let mut buffer = std::io::stderr();
+
+  write_msg(&mut buffer, file_path, meta)?;
+
+  Ok(())
+}
+
+fn write_msg<P: AsRef<Path>>(
+  buffer: &mut impl std::io::Write,
   file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
   let (_version, name, authors, homepage) =
     (&meta.version, &meta.name, &meta.authors, &meta.homepage);
 
-  let stderr = BufferWriter::stderr(ColorChoice::Auto);
-  let mut buffer = stderr.buffer();
-  buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
-
-  writeln!(&mut buffer, "Well, this is embarrassing.\n")?;
+  writeln!(buffer, "Well, this is embarrassing.\n")?;
   writeln!(
-    &mut buffer,
+    buffer,
     "{name} had a problem and crashed. To help us diagnose the \
      problem you can send us a crash report.\n"
   )?;
   writeln!(
-    &mut buffer,
+    buffer,
     "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
@@ -162,22 +196,19 @@ pub fn print_msg<P: AsRef<Path>>(
   )?;
 
   if !homepage.is_empty() {
-    writeln!(&mut buffer, "- Homepage: {homepage}")?;
+    writeln!(buffer, "- Homepage: {homepage}")?;
   }
   if !authors.is_empty() {
-    writeln!(&mut buffer, "- Authors: {authors}")?;
+    writeln!(buffer, "- Authors: {authors}")?;
   }
   writeln!(
-    &mut buffer,
+    buffer,
     "\nWe take privacy seriously, and do not perform any \
      automated error collection. In order to improve the software, we rely on \
      people to submit reports.\n"
   )?;
-  writeln!(&mut buffer, "Thank you kindly!")?;
+  writeln!(buffer, "Thank you kindly!")?;
 
-  buffer.reset()?;
-
-  stderr.print(&buffer).unwrap();
   Ok(())
 }
 

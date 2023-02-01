@@ -59,6 +59,8 @@ jobs:
       with:
         toolchain: 1.60.0  # MSRV
     - uses: Swatinem/rust-cache@v2
+    - name: No default features
+      run: cargo check --workspace --all-targets --no-default-features
     - name: Debug
       run: cargo check --workspace --all-targets
     - name: Release

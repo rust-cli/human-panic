@@ -127,6 +127,7 @@ name = "human-panic"
 version = "1.0.4-alpha.0"
 dependencies = [
  "backtrace",
+ "concolor",
  "os_info",
  "serde",
  "serde_derive",
