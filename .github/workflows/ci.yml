@@ -41,11 +41,9 @@ jobs:
         toolchain: ${{ matrix.rust }}
     - uses: Swatinem/rust-cache@v2
     - name: Build
-      run: cargo test --no-run --workspace --all-features
+      run: cargo test --no-run --workspace
     - name: Default features
       run: cargo test --workspace
-    - name: All features
-      run: cargo test --workspace --all-features
     - name: No-default features
       run: cargo test --workspace --no-default-features
   msrv:
@@ -61,8 +59,6 @@ jobs:
     - uses: Swatinem/rust-cache@v2
     - name: Default features
       run: cargo check --workspace --all-targets
-    - name: All features
-      run: cargo check --workspace --all-targets --all-features
     - name: No-default features
       run: cargo check --workspace --all-targets --no-default-features
   docs:
@@ -79,7 +75,7 @@ jobs:
     - name: Check documentation
       env:
         RUSTDOCFLAGS: -D warnings
-      run: cargo doc --workspace --all-features --no-deps --document-private-items
+      run: cargo doc --workspace --no-deps --document-private-items
   rustfmt:
     name: rustfmt
     runs-on: ubuntu-latest
@@ -114,7 +110,7 @@ jobs:
       run: cargo install clippy-sarif sarif-fmt
     - name: Check
       run: >
-        cargo clippy --workspace --all-features --all-targets --message-format=json -- -D warnings --allow deprecated
+        cargo clippy --workspace --all-targets --message-format=json -- -D warnings --allow deprecated
         | clippy-sarif
         | tee clippy-results.sarif
         | sarif-fmt

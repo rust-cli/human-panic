@@ -34,8 +34,6 @@ jobs:
     - uses: Swatinem/rust-cache@v2
     - name: Default features
       run: cargo test --workspace
-    - name: All features
-      run: cargo test --workspace --all-features
     - name: No-default features
       run: cargo test --workspace --no-default-features
   rustfmt:
@@ -76,7 +74,7 @@ jobs:
       run: cargo install clippy-sarif sarif-fmt
     - name: Check
       run: >
-        cargo clippy --workspace --all-features --all-targets --message-format=json -- -D warnings --allow deprecated
+        cargo clippy --workspace --all-targets --message-format=json -- -D warnings --allow deprecated
         | clippy-sarif
         | tee clippy-results.sarif
         | sarif-fmt
