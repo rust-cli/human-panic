@@ -8,4 +8,4 @@ edition = "2018"
 human-panic = { path = "../.." }
 
 [dev-dependencies]
-assert_cli = "0.6.3"
+snapbox = { version = "0.4.4", features = ["cmd"] }
