@@ -70,7 +70,7 @@ impl Report {
       .enumerate()
     {
       let ip = frame.ip();
-      let _ = write!(backtrace, "\n{:4}: {:2$?}", idx, ip, HEX_WIDTH);
+      let _ = write!(backtrace, "\n{idx:4}: {ip:HEX_WIDTH$?}");
 
       let symbols = frame.symbols();
       if symbols.is_empty() {
@@ -87,7 +87,7 @@ impl Report {
         }
 
         if let Some(name) = symbol.name() {
-          let _ = write!(backtrace, " - {}", name);
+          let _ = write!(backtrace, " - {name}");
         } else {
           let _ = write!(backtrace, " - <unknown>");
         }
