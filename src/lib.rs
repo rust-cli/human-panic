@@ -41,7 +41,6 @@
 //! Thank you kindly!
 
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
-#![cfg_attr(feature = "nightly", feature(external_doc))]
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 
 pub mod report;
