@@ -62,6 +62,8 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
+  /// The URL of the crate's repository
+  pub repository: Cow<'static, str>,
 }
 
 /// `human-panic` initialisation macro
@@ -118,6 +120,7 @@ macro_rules! setup_panic {
           name: env!("CARGO_PKG_NAME").into(),
           authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
           homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+          repository: env!("CARGO_PKG_REPOSITORY").into(),
         };
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
@@ -136,8 +139,8 @@ pub fn print_msg<P: AsRef<Path>>(
   file_path: Option<P>,
   meta: &Metadata,
 ) -> IoResult<()> {
-  let (_version, name, authors, homepage) =
-    (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+  let (_version, name, authors, homepage, repository) =
+    (&meta.version, &meta.name, &meta.authors, &meta.homepage, &meta.repository);
 
   let stderr = BufferWriter::stderr(ColorChoice::Auto);
   let mut buffer = stderr.buffer();
@@ -163,6 +166,9 @@ pub fn print_msg<P: AsRef<Path>>(
 
   if !homepage.is_empty() {
     writeln!(&mut buffer, "- Homepage: {homepage}")?;
+  }
+  if !repository.is_empty() && repository != homepage {
+    writeln!(&mut buffer, "- Repository: {}", repository)?;
   }
   if !authors.is_empty() {
     writeln!(&mut buffer, "- Authors: {authors}")?;
