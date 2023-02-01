@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixes
 
 - Use normal panics when `RUST_BACKTRACE` is enabled
-- Skip unnecesary frames in backtrace
+- Skip unnecessary frames in backtrace
 
 ## 2018-04-18, Version 0.3.0
 

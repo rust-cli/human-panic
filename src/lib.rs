@@ -52,6 +52,8 @@ use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
 /// A convenient metadata struct that describes a crate
+///
+/// See [`metadata!`]
 pub struct Metadata {
   /// The crate version
   pub version: Cow<'static, str>,
@@ -61,6 +63,19 @@ pub struct Metadata {
   pub authors: Cow<'static, str>,
   /// The URL of the crate's website
   pub homepage: Cow<'static, str>,
+}
+
+/// Initialize [`Metadata`]
+#[macro_export]
+macro_rules! metadata {
+  () => {
+    Metadata {
+      version: env!("CARGO_PKG_VERSION").into(),
+      name: env!("CARGO_PKG_NAME").into(),
+      authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
+      homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+    }
+  };
 }
 
 /// `human-panic` initialisation macro
@@ -90,34 +105,10 @@ macro_rules! setup_panic {
     #[allow(unused_imports)]
     use $crate::{handle_dump, print_msg, Metadata};
 
-    #[cfg(not(debug_assertions))]
-    match ::std::env::var("RUST_BACKTRACE") {
-      Err(_) => {
-        panic::set_hook(Box::new(move |info: &PanicInfo| {
-          let file_path = handle_dump(&$meta, info);
-          print_msg(file_path, &$meta)
-            .expect("human-panic: printing error message to console failed");
-        }));
-      }
-      Ok(_) => {}
-    }
-  };
-
-  () => {
-    #[allow(unused_imports)]
-    use std::panic::{self, PanicInfo};
-    #[allow(unused_imports)]
-    use $crate::{handle_dump, print_msg, Metadata};
-
-    #[cfg(not(debug_assertions))]
-    match ::std::env::var("RUST_BACKTRACE") {
-      Err(_) => {
-        let meta = Metadata {
-          version: env!("CARGO_PKG_VERSION").into(),
-          name: env!("CARGO_PKG_NAME").into(),
-          authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
-          homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-        };
+    match $crate::PanicStyle::default() {
+      $crate::PanicStyle::Debug => {}
+      $crate::PanicStyle::Human => {
+        let meta = $meta;
 
         panic::set_hook(Box::new(move |info: &PanicInfo| {
           let file_path = handle_dump(&meta, info);
@@ -125,9 +116,34 @@ macro_rules! setup_panic {
             .expect("human-panic: printing error message to console failed");
         }));
       }
-      Ok(_) => {}
     }
   };
+
+  () => {
+    $crate::setup_panic!($crate::metadata!());
+  };
+}
+
+/// Style of panic to be used
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub enum PanicStyle {
+  /// Normal panic
+  Debug,
+  /// Human-formatted panic
+  Human,
+}
+
+impl Default for PanicStyle {
+  fn default() -> Self {
+    if cfg!(debug_assertions) {
+      PanicStyle::Debug
+    } else {
+      match ::std::env::var("RUST_BACKTRACE") {
+        Ok(_) => PanicStyle::Debug,
+        Err(_) => PanicStyle::Human,
+      }
+    }
+  }
 }
 
 /// Utility function that prints a message to our human users
