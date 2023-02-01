@@ -31,6 +31,7 @@ pub struct Report {
   cause: String,
   method: Method,
   backtrace: String,
+  rustc_version: String
 }
 
 impl Report {
@@ -42,6 +43,7 @@ impl Report {
     explanation: String,
     cause: String,
   ) -> Self {
+    let rustc_version = env!("RUSTC_VERSION").to_string().replace("\\n", "\n");
     let operating_system = os_info::get().to_string();
 
     //We skip 3 frames from backtrace library
@@ -114,6 +116,7 @@ impl Report {
       explanation,
       cause,
       backtrace,
+      rustc_version
     }
   }
 
