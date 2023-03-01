@@ -49,5 +49,5 @@ uuid = { version = "0.8.0", features = ["v4"], default-features = false }
 serde_derive = "1.0.79"
 toml = "0.5.0"
 serde = "1.0.79"
-os_info = "2.0.6"
+os_info = "3.6.0"
 backtrace = "0.3.9"
