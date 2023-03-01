@@ -111,7 +111,9 @@ jobs:
         components: clippy
     - uses: Swatinem/rust-cache@v2
     - name: Install SARIF tools
-      run: cargo install clippy-sarif sarif-fmt
+      run: cargo install clippy-sarif --version 0.3.4 --locked  # Held back due to msrv
+    - name: Install SARIF tools
+      run: cargo install sarif-fmt --version 0.3.4 --locked # Held back due to msrv
     - name: Check
       run: >
         cargo clippy --workspace --all-targets --message-format=json -- -D warnings --allow deprecated
