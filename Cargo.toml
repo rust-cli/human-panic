@@ -14,7 +14,7 @@ homepage = "https://github.com/rust-cli/human-panic"
 categories = ["command-line-interface"]
 keywords = ["cli", "panic"]
 edition = "2018"
-rust-version = "1.60.0"  # MSRV
+rust-version = "1.64.0"  # MSRV
 include = [
   "build.rs",
   "src/**/*",
