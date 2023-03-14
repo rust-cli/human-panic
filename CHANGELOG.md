@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.1.2] - 2023-03-14
+
 ### Compatibility
 
 - Update MSRV to 1.64.0
@@ -160,7 +162,8 @@ and choose a nightly that actually exists.
 ```
 
 <!-- next-url -->
-[Unreleased]: https://github.com/rust-cli/human-panic/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/rust-cli/human-panic/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/rust-cli/human-panic/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/rust-cli/human-panic/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/rust-cli/argfile/compare/v1.0.3...v1.1.0
 [v1.0.3]: https://github.com/rust-cli/argfile/compare/1.0.1...v1.0.3
