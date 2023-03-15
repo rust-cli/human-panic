@@ -63,7 +63,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f7b3e3c41e9488eeda196b6806dbf487742107d61b2e16485bcca6c25ed5755b"
 dependencies = [
  "bitflags",
- "concolor-query",
+ "concolor-query 0.1.0",
+ "is-terminal",
+]
+
+[[package]]
+name = "concolor"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0b946244a988c390a94667ae0e3958411fa40cc46ea496a929b263d883f5f9c3"
+dependencies = [
+ "bitflags",
+ "concolor-query 0.3.3",
  "is-terminal",
 ]
 
@@ -72,6 +83,15 @@ name = "concolor-query"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "82a90734b3d5dcf656e7624cca6bce9c3a90ee11f900e80141a7427ccfb3d317"
+
+[[package]]
+name = "concolor-query"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "88d11d52c3d7ca2e6d0040212be9e4dbbcd78b6447f535b6b561f449427944cf"
+dependencies = [
+ "windows-sys",
+]
 
 [[package]]
 name = "custom-panic-test"
@@ -136,7 +156,7 @@ name = "human-panic"
 version = "1.1.1"
 dependencies = [
  "backtrace",
- "concolor",
+ "concolor 0.1.1",
  "os_info",
  "serde",
  "serde_derive",
@@ -336,7 +356,7 @@ version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4389a6395e9925166f19d67b64874e526ec28a4b8455f3321b686c912299c3ea"
 dependencies = [
- "concolor",
+ "concolor 0.0.12",
  "libc",
  "normalize-line-endings",
  "os_pipe",
