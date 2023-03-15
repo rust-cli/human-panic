@@ -69,7 +69,7 @@ pub struct Metadata {
 #[macro_export]
 macro_rules! metadata {
     () => {
-        Metadata {
+        $crate::Metadata {
             version: env!("CARGO_PKG_VERSION").into(),
             name: env!("CARGO_PKG_NAME").into(),
             authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
