@@ -149,32 +149,24 @@ impl Default for PanicStyle {
 /// Utility function that prints a message to our human users
 #[cfg(feature = "color")]
 pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
-    use termcolor::{BufferWriter, Color, ColorChoice, ColorSpec, WriteColor};
+    use std::io::Write as _;
 
-    let stderr_support = concolor::get(concolor::Stream::Stdout);
-    let choice = if stderr_support.color() {
-        ColorChoice::Always
-    } else {
-        ColorChoice::Never
-    };
+    let stderr = anstyle_stream::stderr();
+    let mut stderr = stderr.lock();
 
-    let stderr = BufferWriter::stderr(choice);
-    let mut buffer = stderr.buffer();
-    buffer.set_color(ColorSpec::new().set_fg(Some(Color::Red)))?;
+    write!(stderr, "{}", anstyle::AnsiColor::Red.render_fg())?;
+    write_msg(&mut stderr, file_path, meta)?;
+    write!(stderr, "{}", anstyle::Reset.render())?;
 
-    write_msg(&mut buffer, file_path, meta)?;
-
-    buffer.reset()?;
-
-    stderr.print(&buffer).unwrap();
     Ok(())
 }
 
 #[cfg(not(feature = "color"))]
 pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
-    let mut buffer = std::io::stderr();
+    let stderr = std::io::stderr();
+    let mut stderr = stderr.lock();
 
-    write_msg(&mut buffer, file_path, meta)?;
+    write_msg(&mut stderr, file_path, meta)?;
 
     Ok(())
 }
