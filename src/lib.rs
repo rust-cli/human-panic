@@ -151,7 +151,7 @@ impl Default for PanicStyle {
 pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
     use std::io::Write as _;
 
-    let stderr = anstyle_stream::stderr();
+    let stderr = anstream::stderr();
     let mut stderr = stderr.lock();
 
     write!(stderr, "{}", anstyle::AnsiColor::Red.render_fg())?;
