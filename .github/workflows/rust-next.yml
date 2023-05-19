@@ -5,7 +5,7 @@ permissions:
 
 on:
   schedule:
-  - cron: '1 1 1 * *'
+  - cron: '8 8 8 * *'
 
 env:
   RUST_BACKTRACE: 1
@@ -40,51 +40,3 @@ jobs:
       run: cargo test --no-run --release
     - name: Test Release
       run: cargo test --release
-  rustfmt:
-    name: rustfmt
-    strategy:
-      matrix:
-        rust:
-        - stable
-        - beta
-    continue-on-error: ${{ matrix.rust != 'stable' }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: ${{ matrix.rust }}
-        components: rustfmt
-    - uses: Swatinem/rust-cache@v2
-    - name: Check formatting
-      run: cargo fmt --all -- --check
-  clippy:
-    name: clippy
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write # to upload sarif results
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        toolchain: stable
-        components: clippy
-    - uses: Swatinem/rust-cache@v2
-    - name: Install SARIF tools
-      run: cargo install clippy-sarif sarif-fmt
-    - name: Check
-      run: >
-        cargo clippy --workspace --all-targets --message-format=json -- -D warnings --allow deprecated
-        | clippy-sarif
-        | tee clippy-results.sarif
-        | sarif-fmt
-      continue-on-error: true
-    - name: Upload
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: clippy-results.sarif
-        wait-for-processing: true

@@ -2,17 +2,20 @@
 
 repository:
   description: "😱 Panic messages for humans."
-  homepage: https://docs.rs/human-panic
-  topics: rust cli panic-hook
+  homepage: "https://docs.rs/human-panic"
+  topics: "rust cli panic-hook"
   has_issues: true
   has_projects: false
   has_wiki: false
   has_downloads: true
-  default_branch: master
+  default_branch: main
 
-  allow_squash_merge: true
+  # Preference: people do clean commits
   allow_merge_commit: true
-  allow_rebase_merge: true
+  # Backup in case we need to clean up commits
+  allow_squash_merge: true
+  # Not really needed
+  allow_rebase_merge: false
 
   allow_auto_merge: true
   delete_branch_on_merge: true
@@ -25,22 +28,22 @@ labels:
   # Type
   - name: bug
     color: '#b60205'
-    description: Not as expected
+    description: "Not as expected"
   - name: enhancement
     color: '#1d76db'
-    description: Improve the expected
+    description: "Improve the expected"
   # Flavor
   - name: question
     color: "#cc317c"
-    description: Uncertainty is involved
+    description: "Uncertainty is involved"
   - name: breaking-change
     color: "#e99695"
   - name: good first issue
     color: '#c2e0c6'
-    description: Help wanted!
+    description: "Help wanted!"
 
 branches:
-  - name: master
+  - name: main
     protection:
       required_pull_request_reviews: null
       required_conversation_resolution: true
