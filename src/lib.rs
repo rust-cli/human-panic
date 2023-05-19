@@ -40,6 +40,7 @@
 //!
 //! Thank you kindly!
 
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 #![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 

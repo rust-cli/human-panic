@@ -3,30 +3,40 @@ members = [
   "tests/single-panic",
   "tests/custom-panic",
 ]
+resolver = "2"
 
-[package]
-name = "human-panic"
-version = "1.1.4"
-description = "Panic messages for humans"
+[workspace.package]
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/rust-cli/human-panic"
-homepage = "https://github.com/rust-cli/human-panic"
-categories = ["command-line-interface"]
-keywords = ["cli", "panic"]
-edition = "2018"
-rust-version = "1.64.0"  # MSRV
+edition = "2021"
+rust-version = "1.65.0"  # MSRV
 include = [
   "build.rs",
   "src/**/*",
   "Cargo.toml",
+  "Cargo.lock",
   "LICENSE*",
   "README.md",
   "benches/**/*",
   "examples/**/*"
 ]
 
+
+[package]
+name = "human-panic"
+version = "1.1.4"
+description = "Panic messages for humans"
+repository = "https://github.com/rust-cli/human-panic"
+homepage = "https://github.com/rust-cli/human-panic"
+categories = ["command-line-interface"]
+keywords = ["cli", "panic"]
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+include.workspace = true
+
 [package.metadata.docs.rs]
 all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [package.metadata.release]
 pre-release-replacements = [
