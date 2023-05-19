@@ -8,7 +8,7 @@ repository:
   has_projects: false
   has_wiki: false
   has_downloads: true
-  default_branch: main
+  default_branch: master
 
   # Preference: people do clean commits
   allow_merge_commit: true
@@ -43,7 +43,7 @@ labels:
     description: "Help wanted!"
 
 branches:
-  - name: main
+  - name: master
     protection:
       required_pull_request_reviews: null
       required_conversation_resolution: true
