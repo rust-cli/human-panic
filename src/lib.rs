@@ -88,6 +88,9 @@ macro_rules! metadata {
 /// The Metadata struct can't implement `Default` because of orphan rules, which
 /// means you need to provide all fields for initialisation.
 ///
+/// The macro should be called from within a function, for example as the first line of the
+/// `main()` function of the program.
+///
 /// ```
 /// use human_panic::setup_panic;
 ///
