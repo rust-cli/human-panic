@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Avoid symbol conflicts from macros
+
 ## [1.1.4] - 2023-04-13
 
 ### Internal
