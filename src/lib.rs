@@ -69,14 +69,14 @@ pub struct Metadata {
 /// Initialize [`Metadata`]
 #[macro_export]
 macro_rules! metadata {
-    () => {
+    () => {{
         $crate::Metadata {
             version: env!("CARGO_PKG_VERSION").into(),
             name: env!("CARGO_PKG_NAME").into(),
             authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
             homepage: env!("CARGO_PKG_HOMEPAGE").into(),
         }
-    };
+    }};
 }
 
 /// `human-panic` initialisation macro
@@ -103,7 +103,7 @@ macro_rules! metadata {
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
-    ($meta:expr) => {
+    ($meta:expr) => {{
         #[allow(unused_imports)]
         use std::panic::{self, PanicInfo};
         #[allow(unused_imports)]
@@ -121,7 +121,7 @@ macro_rules! setup_panic {
                 }));
             }
         }
-    };
+    }};
 
     () => {
         $crate::setup_panic!($crate::metadata!());
