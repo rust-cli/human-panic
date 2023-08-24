@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Update MSV to 1.70.0
+
+### Performance
+
+- Improve build times by dropping `is-terminal` dependency
+
 ## [1.1.5] - 2023-06-13
 
 ### Fixes
