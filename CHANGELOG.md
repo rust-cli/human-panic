@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Performance
+
+- Improve build times by only pullin in `toml` rendering, not parsing
+
 ## [1.2.1] - 2023-09-28
 
 ### Internal
