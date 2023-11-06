@@ -137,7 +137,7 @@ checksum = "7dfda62a12f55daeae5015f81b0baea145391cb4520f86c248fc615d72640d12"
 
 [[package]]
 name = "human-panic"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "anstream",
  "anstyle",

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [1.2.2] - 2023-11-06
+
 ### Performance
 
 - Improve build times by only pullin in `toml` rendering, not parsing
@@ -200,7 +202,8 @@ and choose a nightly that actually exists.
 ```
 
 <!-- next-url -->
-[Unreleased]: https://github.com/rust-cli/human-panic/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/rust-cli/human-panic/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/rust-cli/human-panic/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/rust-cli/human-panic/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/rust-cli/human-panic/compare/v1.1.5...v1.2.0
 [1.1.5]: https://github.com/rust-cli/human-panic/compare/v1.1.4...v1.1.5
