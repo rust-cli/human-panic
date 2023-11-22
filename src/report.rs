@@ -3,12 +3,15 @@
 //! A `Report` contains the metadata collected about the event
 //! to construct a helpful error message.
 
-use backtrace::Backtrace;
-use serde_derive::Serialize;
 use std::error::Error;
 use std::fmt::Write as FmtWrite;
-use std::mem;
-use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
+use std::fs::File;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use std::{env, mem};
+
+use backtrace::Backtrace;
+use serde_derive::Serialize;
 use uuid::Uuid;
 
 /// Method of failure.

@@ -45,12 +45,12 @@
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 
 pub mod report;
-use report::{Method, Report};
-
 use std::borrow::Cow;
-use std::io::Result as IoResult;
+use std::io::{Result as IoResult, Write};
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
+
+use report::{Method, Report};
 
 /// A convenient metadata struct that describes a crate
 ///
@@ -103,11 +103,12 @@ macro_rules! metadata {
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
-    ($meta:expr) => {{
+    ($meta:expr, $writer:expr) => {{
         #[allow(unused_imports)]
         use std::panic::{self, PanicInfo};
+
         #[allow(unused_imports)]
-        use $crate::{handle_dump, print_msg, Metadata};
+        use $crate::{handle_dump, print_msg_with_writer, Metadata};
 
         match $crate::PanicStyle::default() {
             $crate::PanicStyle::Debug => {}
@@ -116,12 +117,16 @@ macro_rules! setup_panic {
 
                 panic::set_hook(Box::new(move |info: &PanicInfo| {
                     let file_path = handle_dump(&meta, info);
-                    print_msg(file_path, &meta)
+                    print_msg_with_writer($writer, file_path, &meta)
                         .expect("human-panic: printing error message to console failed");
                 }));
             }
         }
     }};
+
+    ($meta:expr) => {
+        $crate::setup_panic!($crate::metadata!(), $crate::DefaultPanicMessageWriter);
+    };
 
     () => {
         $crate::setup_panic!($crate::metadata!());
@@ -153,69 +158,94 @@ impl Default for PanicStyle {
 /// Utility function that prints a message to our human users
 #[cfg(feature = "color")]
 pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
-    use std::io::Write as _;
+    print_msg_with_writer(DefaultPanicMessageWriter, file_path, meta)
+}
 
+#[cfg(feature = "color")]
+pub fn print_msg_with_writer<P: AsRef<Path>, W: PanicMessageWriter>(
+    writer: W,
+    file_path: Option<P>,
+    meta: &Metadata,
+) -> IoResult<()> {
     let stderr = anstream::stderr();
     let mut stderr = stderr.lock();
 
     write!(stderr, "{}", anstyle::AnsiColor::Red.render_fg())?;
-    write_msg(&mut stderr, file_path, meta)?;
+    writer.write_panic_msg(&mut stderr, file_path.as_ref(), meta)?;
     write!(stderr, "{}", anstyle::Reset.render())?;
 
     Ok(())
 }
 
 #[cfg(not(feature = "color"))]
-pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg_with_writer<P: AsRef<Path>, W: PanicMessageWriter>(
+    writer: W,
+    file_path: Option<P>,
+    meta: &Metadata,
+) -> IoResult<()> {
     let stderr = std::io::stderr();
     let mut stderr = stderr.lock();
 
-    write_msg(&mut stderr, file_path, meta)?;
+    writer.write_panic_msg(&mut stderr, file_path.as_ref(), meta)?;
 
     Ok(())
 }
 
-fn write_msg<P: AsRef<Path>>(
-    buffer: &mut impl std::io::Write,
-    file_path: Option<P>,
-    meta: &Metadata,
-) -> IoResult<()> {
-    let (_version, name, authors, homepage) =
-        (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+pub trait PanicMessageWriter {
+    fn write_panic_msg<P: AsRef<Path>, W: Write>(
+        &self,
+        buffer: &mut W,
+        file_path: Option<&P>,
+        meta: &Metadata,
+    ) -> IoResult<()>;
+}
 
-    writeln!(buffer, "Well, this is embarrassing.\n")?;
-    writeln!(
-        buffer,
-        "{name} had a problem and crashed. To help us diagnose the \
+pub struct DefaultPanicMessageWriter;
+
+impl PanicMessageWriter for DefaultPanicMessageWriter {
+    fn write_panic_msg<P: AsRef<Path>, W: Write>(
+        &self,
+        buffer: &mut W,
+        file_path: Option<&P>,
+        meta: &Metadata,
+    ) -> IoResult<()> {
+        let (_version, name, authors, homepage) =
+            (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+
+        writeln!(buffer, "Well, this is embarrassing.\n")?;
+        writeln!(
+            buffer,
+            "{name} had a problem and crashed. To help us diagnose the \
      problem you can send us a crash report.\n"
-    )?;
-    writeln!(
-        buffer,
-        "We have generated a report file at \"{}\". Submit an \
+        )?;
+        writeln!(
+            buffer,
+            "We have generated a report file at \"{}\". Submit an \
      issue or email with the subject of \"{} Crash Report\" and include the \
      report as an attachment.\n",
-        match file_path {
-            Some(fp) => format!("{}", fp.as_ref().display()),
-            None => "<Failed to store file to disk>".to_string(),
-        },
-        name
-    )?;
+            match file_path {
+                Some(fp) => format!("{}", fp.as_ref().display()),
+                None => "<Failed to store file to disk>".to_string(),
+            },
+            name
+        )?;
 
-    if !homepage.is_empty() {
-        writeln!(buffer, "- Homepage: {homepage}")?;
-    }
-    if !authors.is_empty() {
-        writeln!(buffer, "- Authors: {authors}")?;
-    }
-    writeln!(
-        buffer,
-        "\nWe take privacy seriously, and do not perform any \
+        if !homepage.is_empty() {
+            writeln!(buffer, "- Homepage: {homepage}")?;
+        }
+        if !authors.is_empty() {
+            writeln!(buffer, "- Authors: {authors}")?;
+        }
+        writeln!(
+            buffer,
+            "\nWe take privacy seriously, and do not perform any \
      automated error collection. In order to improve the software, we rely on \
      people to submit reports.\n"
-    )?;
-    writeln!(buffer, "Thank you kindly!")?;
+        )?;
+        writeln!(buffer, "Thank you kindly!")?;
 
-    Ok(())
+        Ok(())
+    }
 }
 
 /// Utility function which will handle dumping information to disk
