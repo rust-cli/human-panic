@@ -294,9 +294,9 @@ dependencies = [
 
 [[package]]
 name = "snapbox"
-version = "0.4.16"
+version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73145a30df4935f50a7b13c1882bce7d194d7071ad0bcc36e7cacbf9ef16e3ec"
+checksum = "4a99efa20de5053229642a477436cdb39828c7651c614622eb4888f9688523e6"
 dependencies = [
  "anstream",
  "anstyle",
@@ -311,9 +311,9 @@ dependencies = [
 
 [[package]]
 name = "snapbox-macros"
-version = "0.3.7"
+version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "78ccde059aad940984ff696fe8c280900f7ea71a6fb45fce65071a3f2c40b667"
+checksum = "e1c4b838b05d15ab22754068cb73500b2f3b07bf09d310e15b27f88160f1de40"
 dependencies = [
  "anstream",
 ]
