@@ -41,13 +41,13 @@ jobs:
         toolchain: ${{ matrix.rust }}
     - uses: Swatinem/rust-cache@v2
     - name: Build Debug
-      run: cargo test --no-run
+      run: cargo test --all --no-run
     - name: Test Debug
-      run: cargo test
+      run: cargo test --all
     - name: Build Release
-      run: cargo test --no-run --release
+      run: cargo test --all --no-run --release
     - name: Test Release
-      run: cargo test --release
+      run: cargo test --all --release
   msrv:
     name: "Check MSRV: 1.72"
     runs-on: ubuntu-latest

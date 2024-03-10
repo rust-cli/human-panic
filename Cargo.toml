@@ -2,6 +2,7 @@
 members = [
   "tests/single-panic",
   "tests/custom-panic",
+  "tests/name-collision",
 ]
 resolver = "2"
 
