@@ -1,7 +1,7 @@
 # These settings are synced to GitHub by https://probot.github.io/apps/settings/
 
 repository:
-  description: "😱 Panic messages for humans."
+  description: "Panic messages for humans."
   homepage: "https://docs.rs/human-panic"
   topics: "rust cli panic-hook"
   has_issues: true
