@@ -64,6 +64,8 @@ pub struct Metadata {
     pub authors: Cow<'static, str>,
     /// The URL of the crate's website
     pub homepage: Cow<'static, str>,
+    /// The support information
+    pub supports: Cow<'static, str>,
 }
 
 /// Initialize [`Metadata`]
@@ -75,6 +77,7 @@ macro_rules! metadata {
             name: env!("CARGO_PKG_NAME").into(),
             authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
             homepage: env!("CARGO_PKG_HOMEPAGE").into(),
+            supports: Default::default(),
         }
     }};
 }
@@ -98,7 +101,8 @@ macro_rules! metadata {
 ///     name: env!("CARGO_PKG_NAME").into(),
 ///     version: env!("CARGO_PKG_VERSION").into(),
 ///     authors: "My Company Support <support@mycompany.com>".into(),
-///     homepage: "support.mycompany.com".into(),
+///     homepage: "www.mycompany.com".into(),
+///     supports: "- Open a support request by email to support@mycompany.com".into(),
 /// });
 /// ```
 #[macro_export]
@@ -180,8 +184,13 @@ fn write_msg<P: AsRef<Path>>(
     file_path: Option<P>,
     meta: &Metadata,
 ) -> IoResult<()> {
-    let (_version, name, authors, homepage) =
-        (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+    let Metadata {
+        name,
+        authors,
+        homepage,
+        supports,
+        ..
+    } = meta;
 
     writeln!(buffer, "Well, this is embarrassing.\n")?;
     writeln!(
@@ -206,6 +215,9 @@ fn write_msg<P: AsRef<Path>>(
     }
     if !authors.is_empty() {
         writeln!(buffer, "- Authors: {authors}")?;
+    }
+    if !supports.is_empty() {
+        writeln!(buffer, "\nTo submit the crash report:\n\n{supports}")?;
     }
     writeln!(
         buffer,

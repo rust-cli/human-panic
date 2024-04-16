@@ -5,7 +5,8 @@ fn main() {
         name: env!("CARGO_PKG_NAME").into(),
         version: env!("CARGO_PKG_VERSION").into(),
         authors: "My Company Support <support@mycompany.com".into(),
-        homepage: "support.mycompany.com".into(),
+        homepage: "www.mycompany.com".into(),
+        supports: "- Open a support request by email to support@mycompany.com".into()
     });
 
     println!("A normal log message");

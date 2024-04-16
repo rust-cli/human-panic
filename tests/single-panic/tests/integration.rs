@@ -28,7 +28,8 @@ fn debug() {
         .assert()
         .stderr_matches(
             "\
-thread 'main' panicked at 'OMG EVERYTHING IS ON FIRE!!!', tests/single-panic/src/main.rs:7:3
+thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
+OMG EVERYTHING IS ON FIRE!!!
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 ",
         )
