@@ -49,7 +49,6 @@ use report::{Method, Report};
 
 use std::borrow::Cow;
 use std::io::Result as IoResult;
-use std::marker::PhantomData;
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
@@ -57,7 +56,7 @@ pub type MaybeString = Option<Cow<'static, str>>;
 
 /// A convenient metadata struct that describes a crate
 ///
-/// See [`MetadataBuilder::default`]
+/// See [`metadata!`]
 pub struct Metadata {
     /// The crate version
     pub version: Cow<'static, str>,
@@ -71,41 +70,18 @@ pub struct Metadata {
     pub supports: MaybeString,
 }
 
-/// A builder for [`Metadata`].
-pub struct MetadataBuilder {
-    pub version: Cow<'static, str>,
-    pub name: Cow<'static, str>,
-    pub authors: MaybeString,
-    pub homepage: MaybeString,
-    pub supports: MaybeString,
-    // prevent initialize in literal syntax
-    #[allow(unused)]
-    phantom_data: PhantomData<()>,
-}
-
-impl Default for MetadataBuilder {
-    fn default() -> Self {
-        MetadataBuilder {
+/// Initialize [`Metadata`].
+#[macro_export]
+macro_rules! metadata {
+    () => {{
+        $crate::Metadata {
             version: env!("CARGO_PKG_VERSION").into(),
             name: env!("CARGO_PKG_NAME").into(),
             authors: Some(env!("CARGO_PKG_AUTHORS").replace(":", ", ").into()),
-            homepage: Some(env!("CARGO_PKG_HOMEPAGE").into()),
+            homepage: None,
             supports: None,
-            phantom_data: PhantomData::default(),
         }
-    }
-}
-
-impl MetadataBuilder {
-    pub fn build(self) -> Metadata {
-        Metadata {
-            version: self.version,
-            name: self.name,
-            authors: self.authors,
-            homepage: self.homepage,
-            supports: self.supports,
-        }
-    }
+    }};
 }
 
 /// `human-panic` initialisation macro
@@ -121,13 +97,13 @@ impl MetadataBuilder {
 /// `main()` function of the program.
 ///
 /// ```
-/// use human_panic::{MetadataBuilder, setup_panic};
+/// use human_panic::{metadata, setup_panic};
 ///
-/// let mut builder = MetadataBuilder::default();
-/// builder.authors = Some("My Company Support <support@mycompany.com>".into());
-/// builder.homepage = Some("www.mycompany.com".into());
-/// builder.supports = Some("- Open a support request by email to support@mycompany.com".into());
-/// setup_panic!(builder);
+/// let mut metadata = metadata!();
+/// metadata.authors = Some("My Company Support <support@mycompany.com>".into());
+/// metadata.homepage = Some("www.mycompany.com".into());
+/// metadata.supports = Some("- Open a support request by email to support@mycompany.com".into());
+/// setup_panic!(metadata);
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
@@ -140,7 +116,7 @@ macro_rules! setup_panic {
         match $crate::PanicStyle::default() {
             $crate::PanicStyle::Debug => {}
             $crate::PanicStyle::Human => {
-                let meta = $meta.build();
+                let meta = $meta;
 
                 panic::set_hook(Box::new(move |info: &PanicInfo| {
                     let file_path = handle_dump(&meta, info);
@@ -152,7 +128,7 @@ macro_rules! setup_panic {
     }};
 
     () => {
-        $crate::setup_panic!($crate::MetadataBuilder::default());
+        $crate::setup_panic!($crate::metadata!());
     };
 }
 
