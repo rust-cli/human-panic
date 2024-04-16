@@ -67,7 +67,7 @@ pub struct Metadata {
     /// The URL of the crate's website
     pub homepage: MaybeString,
     /// The support information
-    pub supports: MaybeString,
+    pub support: MaybeString,
 }
 
 /// Initialize [`Metadata`].
@@ -79,7 +79,7 @@ macro_rules! metadata {
             name: env!("CARGO_PKG_NAME").into(),
             authors: Some(env!("CARGO_PKG_AUTHORS").replace(":", ", ").into()),
             homepage: None,
-            supports: None,
+            support: None,
         }
     }};
 }
@@ -102,7 +102,7 @@ macro_rules! metadata {
 /// let mut metadata = metadata!();
 /// metadata.authors = Some("My Company Support <support@mycompany.com>".into());
 /// metadata.homepage = Some("www.mycompany.com".into());
-/// metadata.supports = Some("- Open a support request by email to support@mycompany.com".into());
+/// metadata.support = Some("- Open a support request by email to support@mycompany.com".into());
 /// setup_panic!(metadata);
 /// ```
 #[macro_export]
@@ -188,7 +188,7 @@ fn write_msg<P: AsRef<Path>>(
         name,
         authors,
         homepage,
-        supports,
+        support,
         ..
     } = meta;
 
@@ -216,8 +216,8 @@ fn write_msg<P: AsRef<Path>>(
     if let Some(authors) = authors {
         writeln!(buffer, "- Authors: {authors}")?;
     }
-    if let Some(supports) = supports {
-        writeln!(buffer, "\nTo submit the crash report:\n\n{supports}")?;
+    if let Some(support) = support {
+        writeln!(buffer, "\nTo submit the crash report:\n\n{support}")?;
     }
     writeln!(
         buffer,
