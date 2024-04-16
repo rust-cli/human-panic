@@ -49,37 +49,63 @@ use report::{Method, Report};
 
 use std::borrow::Cow;
 use std::io::Result as IoResult;
+use std::marker::PhantomData;
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
+pub type MaybeString = Option<Cow<'static, str>>;
+
 /// A convenient metadata struct that describes a crate
 ///
-/// See [`metadata!`]
+/// See [`MetadataBuilder::default`]
 pub struct Metadata {
     /// The crate version
     pub version: Cow<'static, str>,
     /// The crate name
     pub name: Cow<'static, str>,
     /// The list of authors of the crate
-    pub authors: Cow<'static, str>,
+    pub authors: MaybeString,
     /// The URL of the crate's website
-    pub homepage: Cow<'static, str>,
+    pub homepage: MaybeString,
     /// The support information
-    pub supports: Cow<'static, str>,
+    pub supports: MaybeString,
 }
 
-/// Initialize [`Metadata`]
-#[macro_export]
-macro_rules! metadata {
-    () => {{
-        $crate::Metadata {
+/// A builder for [`Metadata`].
+pub struct MetadataBuilder {
+    pub version: Cow<'static, str>,
+    pub name: Cow<'static, str>,
+    pub authors: MaybeString,
+    pub homepage: MaybeString,
+    pub supports: MaybeString,
+    // prevent initialize in literal syntax
+    #[allow(unused)]
+    phantom_data: PhantomData<()>,
+}
+
+impl Default for MetadataBuilder {
+    fn default() -> Self {
+        MetadataBuilder {
             version: env!("CARGO_PKG_VERSION").into(),
             name: env!("CARGO_PKG_NAME").into(),
-            authors: env!("CARGO_PKG_AUTHORS").replace(":", ", ").into(),
-            homepage: env!("CARGO_PKG_HOMEPAGE").into(),
-            supports: Default::default(),
+            authors: Some(env!("CARGO_PKG_AUTHORS").replace(":", ", ").into()),
+            homepage: Some(env!("CARGO_PKG_HOMEPAGE").into()),
+            supports: None,
+            phantom_data: PhantomData::default(),
         }
-    }};
+    }
+}
+
+impl MetadataBuilder {
+    pub fn build(self) -> Metadata {
+        Metadata {
+            version: self.version,
+            name: self.name,
+            authors: self.authors,
+            homepage: self.homepage,
+            supports: self.supports,
+        }
+    }
 }
 
 /// `human-panic` initialisation macro
@@ -95,15 +121,13 @@ macro_rules! metadata {
 /// `main()` function of the program.
 ///
 /// ```
-/// use human_panic::setup_panic;
+/// use human_panic::{MetadataBuilder, setup_panic};
 ///
-/// setup_panic!(Metadata {
-///     name: env!("CARGO_PKG_NAME").into(),
-///     version: env!("CARGO_PKG_VERSION").into(),
-///     authors: "My Company Support <support@mycompany.com>".into(),
-///     homepage: "www.mycompany.com".into(),
-///     supports: "- Open a support request by email to support@mycompany.com".into(),
-/// });
+/// let mut builder = MetadataBuilder::default();
+/// builder.authors = Some("My Company Support <support@mycompany.com>".into());
+/// builder.homepage = Some("www.mycompany.com".into());
+/// builder.supports = Some("- Open a support request by email to support@mycompany.com".into());
+/// setup_panic!(builder);
 /// ```
 #[macro_export]
 macro_rules! setup_panic {
@@ -116,7 +140,7 @@ macro_rules! setup_panic {
         match $crate::PanicStyle::default() {
             $crate::PanicStyle::Debug => {}
             $crate::PanicStyle::Human => {
-                let meta = $meta;
+                let meta = $meta.build();
 
                 panic::set_hook(Box::new(move |info: &PanicInfo| {
                     let file_path = handle_dump(&meta, info);
@@ -128,7 +152,7 @@ macro_rules! setup_panic {
     }};
 
     () => {
-        $crate::setup_panic!($crate::metadata!());
+        $crate::setup_panic!($crate::MetadataBuilder::default());
     };
 }
 
@@ -210,13 +234,13 @@ fn write_msg<P: AsRef<Path>>(
         name
     )?;
 
-    if !homepage.is_empty() {
+    if let Some(homepage) = homepage {
         writeln!(buffer, "- Homepage: {homepage}")?;
     }
-    if !authors.is_empty() {
+    if let Some(authors) = authors {
         writeln!(buffer, "- Authors: {authors}")?;
     }
-    if !supports.is_empty() {
+    if let Some(supports) = supports {
         writeln!(buffer, "\nTo submit the crash report:\n\n{supports}")?;
     }
     writeln!(
@@ -247,10 +271,7 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
         (None, None) => None,
     };
 
-    let cause = match message {
-        Some(m) => m,
-        None => "Unknown".into(),
-    };
+    let cause = message.unwrap_or_else(|| "Unknown".into());
 
     match panic_info.location() {
         Some(location) => expl.push_str(&format!(
