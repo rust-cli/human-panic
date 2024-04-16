@@ -49,6 +49,7 @@ use report::{Method, Report};
 
 use std::borrow::Cow;
 use std::io::Result as IoResult;
+use std::marker::PhantomData;
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
@@ -59,28 +60,42 @@ pub type MaybeString = Option<Cow<'static, str>>;
 /// See [`metadata!`]
 pub struct Metadata {
     /// The crate version
-    pub version: Cow<'static, str>,
+    pub version: MaybeString,
     /// The crate name
-    pub name: Cow<'static, str>,
+    pub name: MaybeString,
     /// The list of authors of the crate
     pub authors: MaybeString,
     /// The URL of the crate's website
     pub homepage: MaybeString,
     /// The support information
     pub support: MaybeString,
+
+    // prevent initialized in literal syntax
+    phantom_data: PhantomData<()>,
+}
+
+impl Default for Metadata {
+    fn default() -> Self {
+        Metadata {
+            version: None,
+            name: None,
+            authors: None,
+            homepage: None,
+            support: None,
+            phantom_data: PhantomData,
+        }
+    }
 }
 
 /// Initialize [`Metadata`].
 #[macro_export]
 macro_rules! metadata {
     () => {{
-        $crate::Metadata {
-            version: env!("CARGO_PKG_VERSION").into(),
-            name: env!("CARGO_PKG_NAME").into(),
-            authors: Some(env!("CARGO_PKG_AUTHORS").replace(":", ", ").into()),
-            homepage: None,
-            support: None,
-        }
+        let mut metadata = $crate::Metadata::default();
+        metadata.version = Some(env!("CARGO_PKG_VERSION").into());
+        metadata.name = Some(env!("CARGO_PKG_NAME").into());
+        metadata.authors = Some(env!("CARGO_PKG_AUTHORS").replace(":", ", ").into());
+        metadata
     }};
 }
 
@@ -192,6 +207,8 @@ fn write_msg<P: AsRef<Path>>(
         ..
     } = meta;
 
+    let name = name.as_deref().unwrap_or("<anon>");
+
     writeln!(buffer, "Well, this is embarrassing.\n")?;
     writeln!(
         buffer,
@@ -258,7 +275,13 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
         None => expl.push_str("Panic location unknown.\n"),
     }
 
-    let report = Report::new(&meta.name, &meta.version, Method::Panic, expl, cause);
+    let report = Report::new(
+        meta.name.as_deref().unwrap_or(""),
+        meta.version.as_deref().unwrap_or(""),
+        Method::Panic,
+        expl,
+        cause,
+    );
 
     match report.persist() {
         Ok(f) => Some(f),
