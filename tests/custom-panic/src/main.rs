@@ -1,4 +1,5 @@
 use human_panic::setup_panic;
+use human_panic::Metadata;
 
 fn main() {
     setup_panic!(Metadata {

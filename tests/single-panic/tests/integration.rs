@@ -8,7 +8,7 @@ fn release() {
 
             single-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
-            We have generated a report file at "/tmp/report-ee5cb7e8-1010-4824-bf57-b9726141e881.toml". Submit an issue or email with the subject of "single-panic-test Crash Report" and include the report as an attachment.
+            We have generated a report file at "[..].toml". Submit an issue or email with the subject of "single-panic-test Crash Report" and include the report as an attachment.
 
             - Authors: Human Panic Authors <human-panic-crate@example.com>
 

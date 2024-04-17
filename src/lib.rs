@@ -94,6 +94,7 @@ macro_rules! metadata {
 ///
 /// ```
 /// use human_panic::setup_panic;
+/// use human_panic::Metadata;
 ///
 /// setup_panic!(Metadata {
 ///     name: env!("CARGO_PKG_NAME").into(),
@@ -105,28 +106,31 @@ macro_rules! metadata {
 #[macro_export]
 macro_rules! setup_panic {
     ($meta:expr) => {{
-        #[allow(unused_imports)]
-        use std::panic::{self, PanicInfo};
-        #[allow(unused_imports)]
-        use $crate::{handle_dump, print_msg, Metadata};
-
-        match $crate::PanicStyle::default() {
-            $crate::PanicStyle::Debug => {}
-            $crate::PanicStyle::Human => {
-                let meta = $meta;
-
-                panic::set_hook(Box::new(move |info: &PanicInfo| {
-                    let file_path = handle_dump(&meta, info);
-                    print_msg(file_path, &meta)
-                        .expect("human-panic: printing error message to console failed");
-                }));
-            }
-        }
+        $crate::setup_panic(|| $meta);
     }};
 
     () => {
         $crate::setup_panic!($crate::metadata!());
     };
+}
+
+#[doc(hidden)]
+pub fn setup_panic(meta: impl Fn() -> Metadata) {
+    #[allow(unused_imports)]
+    use std::panic::{self, PanicInfo};
+
+    match PanicStyle::default() {
+        PanicStyle::Debug => {}
+        PanicStyle::Human => {
+            let meta = meta();
+
+            panic::set_hook(Box::new(move |info: &PanicInfo<'_>| {
+                let file_path = handle_dump(&meta, info);
+                print_msg(file_path, &meta)
+                    .expect("human-panic: printing error message to console failed");
+            }));
+        }
+    }
 }
 
 /// Style of panic to be used
