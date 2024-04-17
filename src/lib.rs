@@ -60,6 +60,7 @@ pub struct Metadata {
     version: Cow<'static, str>,
     authors: Option<Cow<'static, str>>,
     homepage: Option<Cow<'static, str>>,
+    support: Option<Cow<'static, str>>,
 }
 
 impl Metadata {
@@ -70,6 +71,7 @@ impl Metadata {
             version: version.into(),
             authors: None,
             homepage: None,
+            support: None,
         }
     }
 
@@ -87,6 +89,15 @@ impl Metadata {
         let value = value.into();
         if !value.is_empty() {
             self.homepage = value.into();
+        }
+        self
+    }
+
+    /// The support information
+    pub fn support(mut self, value: impl Into<Cow<'static, str>>) -> Self {
+        let value = value.into();
+        if !value.is_empty() {
+            self.support = value.into();
         }
         self
     }
@@ -121,6 +132,7 @@ macro_rules! metadata {
 /// setup_panic!(Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
 ///     .authors("My Company Support <support@mycompany.com>")
 ///     .homepage("support.mycompany.com")
+///     .support("- Open a support request by email to support@mycompany.com")
 /// );
 /// ```
 #[macro_export]
@@ -206,8 +218,13 @@ fn write_msg<P: AsRef<Path>>(
     file_path: Option<P>,
     meta: &Metadata,
 ) -> IoResult<()> {
-    let (_version, name, authors, homepage) =
-        (&meta.version, &meta.name, &meta.authors, &meta.homepage);
+    let Metadata {
+        name,
+        authors,
+        homepage,
+        support,
+        ..
+    } = meta;
 
     writeln!(buffer, "Well, this is embarrassing.\n")?;
     writeln!(
@@ -232,6 +249,9 @@ fn write_msg<P: AsRef<Path>>(
     }
     if let Some(authors) = authors {
         writeln!(buffer, "- Authors: {authors}")?;
+    }
+    if let Some(support) = support {
+        writeln!(buffer, "\nTo submit the crash report:\n\n{support}")?;
     }
     writeln!(
         buffer,
