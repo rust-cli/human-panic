@@ -134,7 +134,7 @@ pub fn setup_panic(meta: impl Fn() -> Metadata) {
 }
 
 /// Style of panic to be used
-#[allow(clippy::exhaustive_enums)]
+#[non_exhaustive]
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum PanicStyle {
     /// Normal panic
