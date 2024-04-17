@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Update MSV to 1.73
+- `PanicStyle` is now non-exhaustive
+- `Method` is now non-exhaustive
+- `Metadata`s fields are now private, requiring setters
+
+### Features
+
+- Add `Metadata::support` for where to send reports
+
 ## [1.2.3] - 2024-01-12
 
 ### Internal
