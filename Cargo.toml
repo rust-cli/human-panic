@@ -96,7 +96,7 @@ zero_sized_map_values = "warn"
 
 [package]
 name = "human-panic"
-version = "1.2.3"
+version = "2.0.0"
 description = "Panic messages for humans"
 repository = "https://github.com/rust-cli/human-panic"
 homepage = "https://github.com/rust-cli/human-panic"

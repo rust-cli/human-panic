@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [2.0.0] - 2024-04-17
+
 ### Compatibility
 
 - Update MSV to 1.73
@@ -219,7 +221,8 @@ and choose a nightly that actually exists.
 ```
 
 <!-- next-url -->
-[Unreleased]: https://github.com/rust-cli/human-panic/compare/v1.2.3...HEAD
+[Unreleased]: https://github.com/rust-cli/human-panic/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/rust-cli/human-panic/compare/v1.2.3...v2.0.0
 [1.2.3]: https://github.com/rust-cli/human-panic/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/rust-cli/human-panic/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/rust-cli/human-panic/compare/v1.2.0...v1.2.1
