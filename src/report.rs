@@ -12,8 +12,8 @@ use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 use uuid::Uuid;
 
 /// Method of failure.
-#[allow(clippy::exhaustive_enums)]
 #[derive(Debug, Serialize, Clone, Copy)]
+#[non_exhaustive]
 pub enum Method {
     /// Failure caused by a panic.
     Panic,
