@@ -26,7 +26,7 @@ fn debug() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("custom-panic-test"))
         .assert()
         .stderr_matches(snapbox::str![[r#"
-            thread 'main' panicked at tests/custom-panic/src/main.rs:13:5:
+            thread 'main' panicked at tests/custom-panic/src/main.rs:10:5:
             OMG EVERYTHING IS ON FIRE!!!
             note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
         "#]])
