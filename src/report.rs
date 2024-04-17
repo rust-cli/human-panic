@@ -12,6 +12,7 @@ use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
 use uuid::Uuid;
 
 /// Method of failure.
+#[allow(clippy::exhaustive_enums)]
 #[derive(Debug, Serialize, Clone, Copy)]
 pub enum Method {
     /// Failure caused by a panic.
@@ -42,8 +43,6 @@ impl Report {
         explanation: String,
         cause: String,
     ) -> Self {
-        let operating_system = os_info::get().to_string();
-
         //We skip 3 frames from backtrace library
         //Then we skip 3 frames for our own library
         //(including closure that we set as hook)
@@ -55,6 +54,8 @@ impl Report {
         const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
         //Padding for next lines after frame's address
         const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
+
+        let operating_system = os_info::get().to_string();
 
         let mut backtrace = String::new();
 
@@ -129,7 +130,7 @@ impl Report {
         let file_name = format!("report-{}.toml", &uuid);
         let file_path = Path::new(&tmp_dir).join(file_name);
         let mut file = File::create(&file_path)?;
-        let toml = self.serialize().unwrap();
+        let toml = self.serialize().expect("only using toml-compatible types");
         file.write_all(toml.as_bytes())?;
         Ok(file_path)
     }
