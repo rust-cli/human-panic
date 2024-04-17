@@ -40,9 +40,9 @@
 //!
 //! Thank you kindly!
 
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
-#![cfg_attr(feature = "nightly", deny(missing_docs))]
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![warn(missing_docs)]
 
 pub mod report;
 use report::{Method, Report};
@@ -55,6 +55,7 @@ use std::path::{Path, PathBuf};
 /// A convenient metadata struct that describes a crate
 ///
 /// See [`metadata!`]
+#[allow(clippy::exhaustive_structs)]
 pub struct Metadata {
     /// The crate version
     pub version: Cow<'static, str>,
@@ -129,6 +130,7 @@ macro_rules! setup_panic {
 }
 
 /// Style of panic to be used
+#[allow(clippy::exhaustive_enums)]
 #[derive(Copy, Clone, PartialEq, Eq)]
 pub enum PanicStyle {
     /// Normal panic
@@ -196,7 +198,7 @@ fn write_msg<P: AsRef<Path>>(
      report as an attachment.\n",
         match file_path {
             Some(fp) => format!("{}", fp.as_ref().display()),
-            None => "<Failed to store file to disk>".to_string(),
+            None => "<Failed to store file to disk>".to_owned(),
         },
         name
     )?;
@@ -219,7 +221,7 @@ fn write_msg<P: AsRef<Path>>(
 }
 
 /// Utility function which will handle dumping information to disk
-pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
+pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo<'_>) -> Option<PathBuf> {
     let mut expl = String::new();
 
     #[cfg(feature = "nightly")]
@@ -230,8 +232,8 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
         panic_info.payload().downcast_ref::<&str>(),
         panic_info.payload().downcast_ref::<String>(),
     ) {
-        (Some(s), _) => Some(s.to_string()),
-        (_, Some(s)) => Some(s.to_string()),
+        (Some(s), _) => Some((*s).to_owned()),
+        (_, Some(s)) => Some(s.to_owned()),
         (None, None) => None,
     };
 
@@ -251,11 +253,15 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo) -> Option<PathBuf> {
 
     let report = Report::new(&meta.name, &meta.version, Method::Panic, expl, cause);
 
-    match report.persist() {
-        Ok(f) => Some(f),
-        Err(_) => {
-            eprintln!("{}", report.serialize().unwrap());
-            None
-        }
+    if let Ok(f) = report.persist() {
+        Some(f)
+    } else {
+        eprintln!(
+            "{}",
+            report
+                .serialize()
+                .expect("only doing toml compatible types")
+        );
+        None
     }
 }
