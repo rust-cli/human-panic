@@ -42,7 +42,8 @@
 
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
-#![warn(missing_docs)]
+#![warn(clippy::print_stderr)]
+#![warn(clippy::print_stdout)]
 
 pub mod report;
 use report::{Method, Report};
@@ -300,7 +301,12 @@ pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo<'_>) -> Option<PathBu
     if let Ok(f) = report.persist() {
         Some(f)
     } else {
-        eprintln!(
+        use std::io::Write as _;
+        let stderr = std::io::stderr();
+        let mut stderr = stderr.lock();
+
+        let _ = writeln!(
+            stderr,
             "{}",
             report
                 .serialize()
