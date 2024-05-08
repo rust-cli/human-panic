@@ -8,7 +8,6 @@ on:
   - cron: '8 8 8 * *'
 
 env:
-  RUST_BACKTRACE: 1
   CARGO_TERM_COLOR: always
   CLICOLOR: 1
 
