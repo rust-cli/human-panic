@@ -12,4 +12,4 @@ release = false
 human-panic = { path = "../.." }
 
 [dev-dependencies]
-snapbox = { version = "0.5.9", features = ["cmd"] }
+snapbox = { version = "0.6.0", features = ["cmd"] }
