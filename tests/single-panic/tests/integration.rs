@@ -3,7 +3,7 @@
 fn release() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
         .assert()
-        .stderr_matches(snapbox::str![[r#"
+        .stderr_eq(snapbox::str![[r#"
             Well, this is embarrassing.
 
             single-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
@@ -24,10 +24,11 @@ fn release() {
 fn debug() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
         .assert()
-        .stderr_matches(snapbox::str![[r#"
-            thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
-            OMG EVERYTHING IS ON FIRE!!!
-            note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-        "#]])
+        .stderr_eq(snapbox::str![[r#"
+thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
+OMG EVERYTHING IS ON FIRE!!!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+"#]])
         .code(101);
 }
