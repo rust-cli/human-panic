@@ -25,9 +25,10 @@ fn debug() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
         .assert()
         .stderr_eq_(snapbox::str![[r#"
-            thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
-            OMG EVERYTHING IS ON FIRE!!!
-            note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-        "#]])
+thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
+OMG EVERYTHING IS ON FIRE!!!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+"#]])
         .code(101);
 }
