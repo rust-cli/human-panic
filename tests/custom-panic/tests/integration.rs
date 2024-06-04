@@ -3,7 +3,7 @@
 fn release() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("custom-panic-test"))
         .assert()
-        .stderr_eq_(snapbox::str![[r#"
+        .stderr_eq(snapbox::str![[r#"
             Well, this is embarrassing.
 
             custom-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
@@ -29,7 +29,7 @@ fn release() {
 fn debug() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("custom-panic-test"))
         .assert()
-        .stderr_eq_(snapbox::str![[r#"
+        .stderr_eq(snapbox::str![[r#"
 thread 'main' panicked at tests/custom-panic/src/main.rs:11:5:
 OMG EVERYTHING IS ON FIRE!!!
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
