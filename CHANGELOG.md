@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Compatibility
+
+- Update MSV to 1.74
+
 ## [2.0.0] - 2024-04-17
 
 ### Compatibility
