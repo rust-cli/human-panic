@@ -51,6 +51,7 @@ impl Report {
         const SKIP_FRAMES_NUM: usize = 8;
         //We take padding for address and extra two letters
         //to pad after index.
+        #[allow(unused_qualifications)] // needed for pre-1.80 MSRV
         const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
         //Padding for next lines after frame's address
         const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
