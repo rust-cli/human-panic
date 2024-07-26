@@ -20,7 +20,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest", "macos-14"]
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
         rust: ["stable", "beta"]
         include:
         - os: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
         toolchain: stable
     - uses: Swatinem/rust-cache@v2
     - uses: taiki-e/install-action@cargo-hack
-    - name: Update dependencues
+    - name: Update dependencies
       run: cargo update
     - name: Build
       run: cargo test --workspace --no-run
