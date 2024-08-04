@@ -62,6 +62,7 @@ pub struct Metadata {
     authors: Option<Cow<'static, str>>,
     homepage: Option<Cow<'static, str>>,
     support: Option<Cow<'static, str>>,
+    report: Option<Cow<'static, str>>,
 }
 
 impl Metadata {
@@ -73,6 +74,7 @@ impl Metadata {
             authors: None,
             homepage: None,
             support: None,
+            report: None,
         }
     }
 
@@ -99,6 +101,15 @@ impl Metadata {
         let value = value.into();
         if !value.is_empty() {
             self.support = value.into();
+        }
+        self
+    }
+
+    /// The report information
+    pub fn report(mut self, value: impl Into<Cow<'static, str>>) -> Self {
+        let value = value.into();
+        if !value.is_empty() {
+            self.report = value.into();
         }
         self
     }
@@ -133,6 +144,7 @@ macro_rules! metadata {
 /// setup_panic!(Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
 ///     .authors("My Company Support <support@mycompany.com>")
 ///     .homepage("support.mycompany.com")
+///     .report("Please attach this file to your support request.")
 ///     .support("- Open a support request by email to support@mycompany.com")
 /// );
 /// ```
@@ -224,6 +236,7 @@ fn write_msg<P: AsRef<Path>>(
         authors,
         homepage,
         support,
+        report,
         ..
     } = meta;
 
@@ -235,14 +248,16 @@ fn write_msg<P: AsRef<Path>>(
     )?;
     writeln!(
         buffer,
-        "We have generated a report file at \"{}\". Submit an \
-     issue or email with the subject of \"{} Crash Report\" and include the \
-     report as an attachment.\n",
+        "We have generated a report file at \"{}\". {}\n",
         match file_path {
             Some(fp) => format!("{}", fp.as_ref().display()),
             None => "<Failed to store file to disk>".to_owned(),
         },
-        name
+        if let Some(report) = report {
+            report.to_string()
+        } else {
+            format!("Submit an issue or email with the subject of \"{} Crash Report\" and include the report as an attachment.", name)
+        }
     )?;
 
     if let Some(homepage) = homepage {

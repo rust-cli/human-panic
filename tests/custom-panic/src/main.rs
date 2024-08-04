@@ -5,6 +5,7 @@ fn main() {
     setup_panic!(metadata!()
         .authors("My Company Support <support@mycompany.com")
         .homepage("www.mycompany.com")
+        .report("Please attach this crash report to your support request.")
         .support("- Open a support request by email to support@mycompany.com"));
 
     println!("A normal log message");
