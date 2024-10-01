@@ -8,7 +8,7 @@ fn release() {
 
             custom-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
-            We have generated a report file at "[..].toml". Submit an issue or email with the subject of "custom-panic-test Crash Report" and include the report as an attachment.
+            We have generated a report file at "[..].toml". Please attach this crash report to your support request.
 
             - Homepage: www.mycompany.com
             - Authors: My Company Support <support@mycompany.com
