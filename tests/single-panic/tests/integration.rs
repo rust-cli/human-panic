@@ -4,18 +4,19 @@ fn release() {
     snapbox::cmd::Command::new(snapbox::cmd::cargo_bin!("single-panic-test"))
         .assert()
         .stderr_eq(snapbox::str![[r#"
-            Well, this is embarrassing.
+Well, this is embarrassing.
 
-            single-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
+single-panic-test had a problem and crashed. To help us diagnose the problem you can send us a crash report.
 
-            We have generated a report file at "[..].toml". Submit an issue or email with the subject of "single-panic-test Crash Report" and include the report as an attachment.
+We have generated a report file at "[..].toml". Submit an issue or email with the subject of "single-panic-test Crash Report" and include the report as an attachment.
 
-            - Authors: Human Panic Authors <human-panic-crate@example.com>
+- Authors: Human Panic Authors <human-panic-crate@example.com>
 
-            We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
+We take privacy seriously, and do not perform any automated error collection. In order to improve the software, we rely on people to submit reports.
 
-            Thank you kindly!
-        "#]])
+Thank you kindly!
+
+"#]])
         .code(101);
 }
 
