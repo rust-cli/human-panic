@@ -43,70 +43,8 @@ impl Report {
         explanation: String,
         cause: String,
     ) -> Self {
-        //We skip 3 frames from backtrace library
-        //Then we skip 3 frames for our own library
-        //(including closure that we set as hook)
-        //Then we skip 2 functions from Rust's runtime
-        //that calls panic hook
-        const SKIP_FRAMES_NUM: usize = 8;
-        //We take padding for address and extra two letters
-        //to pad after index.
-        #[allow(unused_qualifications)] // needed for pre-1.80 MSRV
-        const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
-        //Padding for next lines after frame's address
-        const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
-
         let operating_system = os_info::get().to_string();
-
-        let mut backtrace = String::new();
-
-        //Here we iterate over backtrace frames
-        //(each corresponds to function's stack)
-        //We need to print its address
-        //and symbol(e.g. function name),
-        //if it is available
-        for (idx, frame) in Backtrace::new()
-            .frames()
-            .iter()
-            .skip(SKIP_FRAMES_NUM)
-            .enumerate()
-        {
-            let ip = frame.ip();
-            let _ = write!(backtrace, "\n{idx:4}: {ip:HEX_WIDTH$?}");
-
-            let symbols = frame.symbols();
-            if symbols.is_empty() {
-                let _ = write!(backtrace, " - <unresolved>");
-                continue;
-            }
-
-            for (idx, symbol) in symbols.iter().enumerate() {
-                //Print symbols from this address,
-                //if there are several addresses
-                //we need to put it on next line
-                if idx != 0 {
-                    let _ = write!(backtrace, "\n{:1$}", "", NEXT_SYMBOL_PADDING);
-                }
-
-                if let Some(name) = symbol.name() {
-                    let _ = write!(backtrace, " - {name}");
-                } else {
-                    let _ = write!(backtrace, " - <unknown>");
-                }
-
-                //See if there is debug information with file name and line
-                if let (Some(file), Some(line)) = (symbol.filename(), symbol.lineno()) {
-                    let _ = write!(
-                        backtrace,
-                        "\n{:3$}at {}:{}",
-                        "",
-                        file.display(),
-                        line,
-                        NEXT_SYMBOL_PADDING
-                    );
-                }
-            }
-        }
+        let backtrace = render_backtrace();
 
         Self {
             crate_version: version.into(),
@@ -135,4 +73,71 @@ impl Report {
         file.write_all(toml.as_bytes())?;
         Ok(file_path)
     }
+}
+
+fn render_backtrace() -> String {
+    //We skip 3 frames from backtrace library
+    //Then we skip 3 frames for our own library
+    //(including closure that we set as hook)
+    //Then we skip 2 functions from Rust's runtime
+    //that calls panic hook
+    const SKIP_FRAMES_NUM: usize = 8;
+    //We take padding for address and extra two letters
+    //to pad after index.
+    #[allow(unused_qualifications)] // needed for pre-1.80 MSRV
+    const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
+    //Padding for next lines after frame's address
+    const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
+
+    let mut backtrace = String::new();
+
+    //Here we iterate over backtrace frames
+    //(each corresponds to function's stack)
+    //We need to print its address
+    //and symbol(e.g. function name),
+    //if it is available
+    for (idx, frame) in Backtrace::new()
+        .frames()
+        .iter()
+        .skip(SKIP_FRAMES_NUM)
+        .enumerate()
+    {
+        let ip = frame.ip();
+        let _ = write!(backtrace, "\n{idx:4}: {ip:HEX_WIDTH$?}");
+
+        let symbols = frame.symbols();
+        if symbols.is_empty() {
+            let _ = write!(backtrace, " - <unresolved>");
+            continue;
+        }
+
+        for (idx, symbol) in symbols.iter().enumerate() {
+            //Print symbols from this address,
+            //if there are several addresses
+            //we need to put it on next line
+            if idx != 0 {
+                let _ = write!(backtrace, "\n{:1$}", "", NEXT_SYMBOL_PADDING);
+            }
+
+            if let Some(name) = symbol.name() {
+                let _ = write!(backtrace, " - {name}");
+            } else {
+                let _ = write!(backtrace, " - <unknown>");
+            }
+
+            //See if there is debug information with file name and line
+            if let (Some(file), Some(line)) = (symbol.filename(), symbol.lineno()) {
+                let _ = write!(
+                    backtrace,
+                    "\n{:3$}at {}:{}",
+                    "",
+                    file.display(),
+                    line,
+                    NEXT_SYMBOL_PADDING
+                );
+            }
+        }
+    }
+
+    backtrace
 }
