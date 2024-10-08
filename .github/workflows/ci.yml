@@ -50,6 +50,8 @@ jobs:
       run: cargo test --workspace --no-run
     - name: Test
       run: cargo hack test --feature-powerset --exclude-features nightly --workspace
+    - name: Test Release
+      run: cargo test --workspace --release
   msrv:
     name: "Check MSRV"
     runs-on: ubuntu-latest
