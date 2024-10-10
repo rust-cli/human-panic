@@ -75,16 +75,10 @@ impl Report {
 }
 
 fn render_backtrace() -> String {
-    //We skip 3 frames from backtrace library
-    //Then we skip 3 frames for our own library
-    //(including closure that we set as hook)
-    //Then we skip 2 functions from Rust's runtime
-    //that calls panic hook
-    const SKIP_FRAMES_NUM: usize = 8;
     //We take padding for address and extra two letters
     //to pad after index.
     #[allow(unused_qualifications)] // needed for pre-1.80 MSRV
-    const HEX_WIDTH: usize = mem::size_of::<usize>() + 2;
+    const HEX_WIDTH: usize = mem::size_of::<usize>() * 2 + 2;
     //Padding for next lines after frame's address
     const NEXT_SYMBOL_PADDING: usize = HEX_WIDTH + 6;
 
@@ -95,40 +89,44 @@ fn render_backtrace() -> String {
     //We need to print its address
     //and symbol(e.g. function name),
     //if it is available
-    for (idx, frame) in Backtrace::new()
+    let bt = Backtrace::new();
+    let symbols = bt
         .frames()
         .iter()
-        .skip(SKIP_FRAMES_NUM)
-        .enumerate()
-    {
-        let ip = frame.ip();
-        let _ = write!(backtrace, "\n{idx:4}: {ip:HEX_WIDTH$?}");
-
-        let symbols = frame.symbols();
-        if symbols.is_empty() {
-            let _ = write!(backtrace, " - <unresolved>");
-            continue;
-        }
-
-        for (idx, symbol) in symbols.iter().enumerate() {
-            //Print symbols from this address,
-            //if there are several addresses
-            //we need to put it on next line
-            if idx != 0 {
-                let _ = write!(backtrace, "\n{:1$}", "", NEXT_SYMBOL_PADDING);
-            }
-
-            if let Some(name) = symbol.name() {
-                let _ = write!(backtrace, " - {name}");
+        .flat_map(|frame| {
+            let symbols = frame.symbols();
+            if symbols.is_empty() {
+                vec![(frame, None, "<unresolved>".to_owned())]
             } else {
-                let _ = write!(backtrace, " - <unknown>");
+                symbols
+                    .iter()
+                    .map(|s| {
+                        (
+                            frame,
+                            Some(s),
+                            s.name()
+                                .map(|n| n.to_string())
+                                .unwrap_or_else(|| "<unknown>".to_owned()),
+                        )
+                    })
+                    .collect::<Vec<_>>()
             }
-
+        })
+        .collect::<Vec<_>>();
+    let begin_unwind = "rust_begin_unwind";
+    let begin_unwind_start = symbols
+        .iter()
+        .position(|(_, _, n)| n == begin_unwind)
+        .unwrap_or(0);
+    for (entry_idx, (frame, symbol, name)) in symbols.iter().skip(begin_unwind_start).enumerate() {
+        let ip = frame.ip();
+        let _ = writeln!(backtrace, "{entry_idx:4}: {ip:HEX_WIDTH$?} - {name}");
+        if let Some(symbol) = symbol {
             //See if there is debug information with file name and line
             if let (Some(file), Some(line)) = (symbol.filename(), symbol.lineno()) {
-                let _ = write!(
+                let _ = writeln!(
                     backtrace,
-                    "\n{:3$}at {}:{}",
+                    "{:3$}at {}:{}",
                     "",
                     file.display(),
                     line,

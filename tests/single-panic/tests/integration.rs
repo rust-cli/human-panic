@@ -55,9 +55,8 @@ Panic occurred in file 'tests/single-panic/src/main.rs' at line [..]
 "cause" = "OMG EVERYTHING IS ON FIRE!!!"
 "method" = "Panic"
 "backtrace" = """
-
 ...
-[..]"""
+"""
 
 "#]]
         );
@@ -81,7 +80,7 @@ fn debug() {
         .envs(envs)
         .assert()
         .stderr_eq(snapbox::str![[r#"
-thread 'main' panicked at tests/single-panic/src/main.rs:7:5:
+thread 'main' panicked at tests/single-panic/src/main.rs:[..]:
 OMG EVERYTHING IS ON FIRE!!!
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
 
