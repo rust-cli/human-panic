@@ -8,7 +8,7 @@ use serde_derive::Serialize;
 use std::error::Error;
 use std::fmt::Write as FmtWrite;
 use std::mem;
-use std::{env, fs::File, io::Write, path::Path, path::PathBuf};
+use std::{env, path::Path, path::PathBuf};
 use uuid::Uuid;
 
 /// Method of failure.
@@ -68,9 +68,8 @@ impl Report {
         let tmp_dir = env::temp_dir();
         let file_name = format!("report-{}.toml", &uuid);
         let file_path = Path::new(&tmp_dir).join(file_name);
-        let mut file = File::create(&file_path)?;
         let toml = self.serialize().expect("only using toml-compatible types");
-        file.write_all(toml.as_bytes())?;
+        std::fs::write(&file_path, toml.as_bytes())?;
         Ok(file_path)
     }
 }
