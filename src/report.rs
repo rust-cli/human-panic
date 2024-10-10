@@ -138,5 +138,7 @@ fn render_backtrace() -> String {
         }
     }
 
+    let _ = writeln!(backtrace);
+
     backtrace
 }

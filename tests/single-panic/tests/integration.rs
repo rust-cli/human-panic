@@ -57,7 +57,7 @@ Panic occurred in file 'tests/single-panic/src/main.rs' at line [..]
 "backtrace" = """
 
 ...
-[..]"""
+"""
 
 "#]]
         );
