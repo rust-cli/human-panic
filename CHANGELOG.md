@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Fixes
+
+- Improve detection of what can be trimmed from backtrace
+
 ## [2.0.1] - 2024-07-25
 
 ### Compatibility
