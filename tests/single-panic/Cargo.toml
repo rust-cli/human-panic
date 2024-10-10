@@ -2,7 +2,7 @@
 name = "single-panic-test"
 version = "0.1.0"
 authors = ["Human Panic Authors <human-panic-crate@example.com>"]
-edition = "2018"
+edition.workspace = true
 publish = false
 
 [package.metadata.release]
