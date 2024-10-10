@@ -55,7 +55,6 @@ Panic occurred in file 'tests/single-panic/src/main.rs' at line [..]
 "cause" = "OMG EVERYTHING IS ON FIRE!!!"
 "method" = "Panic"
 "backtrace" = """
-
 ...
 """
 
