@@ -50,6 +50,7 @@ use report::{Method, Report};
 
 use std::borrow::Cow;
 use std::io::Result as IoResult;
+#[allow(deprecated)]
 use std::panic::PanicInfo;
 use std::path::{Path, PathBuf};
 
@@ -149,8 +150,10 @@ macro_rules! setup_panic {
 
 #[doc(hidden)]
 pub fn setup_panic(meta: impl Fn() -> Metadata) {
+    #![allow(deprecated)]
+
     #[allow(unused_imports)]
-    use std::panic::{self, PanicInfo};
+    use std::panic;
 
     match PanicStyle::default() {
         PanicStyle::Debug => {}
@@ -266,6 +269,7 @@ fn write_msg<P: AsRef<Path>>(
 }
 
 /// Utility function which will handle dumping information to disk
+#[allow(deprecated)]
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo<'_>) -> Option<PathBuf> {
     let mut expl = String::new();
 
