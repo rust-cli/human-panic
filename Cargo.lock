@@ -123,6 +123,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "custom-message-test"
+version = "0.1.0"
+dependencies = [
+ "human-panic",
+ "snapbox",
+]
+
+[[package]]
 name = "custom-panic-test"
 version = "0.1.0"
 dependencies = [
