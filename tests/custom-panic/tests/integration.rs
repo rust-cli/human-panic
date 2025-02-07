@@ -11,7 +11,7 @@ custom-panic-test had a problem and crashed. To help us diagnose the problem you
 We have generated a report file at "[..].toml". Submit an issue or email with the subject of "custom-panic-test Crash Report" and include the report as an attachment.
 
 - Homepage: www.mycompany.com
-- Authors: My Company Support <support@mycompany.com
+- Authors: My Company Support <support@mycompany.com>
 
 To submit the crash report:
 
