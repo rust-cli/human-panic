@@ -80,6 +80,7 @@ fn debug() {
         .envs(envs)
         .assert()
         .stderr_eq(snapbox::str![[r#"
+
 thread 'main' panicked at tests/single-panic/src/main.rs:[..]:
 OMG EVERYTHING IS ON FIRE!!!
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
