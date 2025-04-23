@@ -1,0 +1,15 @@
+[package]
+name = "custom-message-test"
+version = "0.1.0"
+authors = ["Human Panic Authors <human-panic-crate@example.com>"]
+edition.workspace = true
+publish = false
+
+[package.metadata.release]
+release = false
+
+[dependencies]
+human-panic = { path = "../.." }
+
+[dev-dependencies]
+snapbox = { version = "0.6.4", features = ["cmd"] }
