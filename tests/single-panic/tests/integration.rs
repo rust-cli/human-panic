@@ -46,15 +46,15 @@ Thank you kindly!
         snapbox::assert_data_eq!(
             report,
             snapbox::str![[r#"
-"name" = "single-panic-test"
-"operating_system" = "[..]"
-"crate_version" = "0.1.0"
-"explanation" = """
+name = "single-panic-test"
+operating_system = "[..]"
+crate_version = "0.1.0"
+explanation = """
 Panic occurred in file 'tests/single-panic/src/main.rs' at line [..]
 """
-"cause" = "OMG EVERYTHING IS ON FIRE!!!"
-"method" = "Panic"
-"backtrace" = """
+cause = "OMG EVERYTHING IS ON FIRE!!!"
+method = "Panic"
+backtrace = """
 ...
 """
 
