@@ -41,7 +41,7 @@
 //! Thank you kindly!
 
 #![cfg_attr(feature = "nightly", feature(panic_info_message))]
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
 
