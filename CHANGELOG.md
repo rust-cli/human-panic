@@ -147,7 +147,7 @@ Ensure no docs are missing (Pascal Hertleif)
 - [[`9e972ef654`](https://github.com/rust-cli/human-panic/commits/9e972ef654df70047f73df51befa3ba2bcb2e5c5)] Ensure no docs are missing (Pascal Hertleif)
 - [[`b82ac5c35a`](https://github.com/rust-cli/human-panic/commits/b82ac5c35a9e5772a54033a084d1cc784ffd6510)] Merge pull request #11 from skade/update-readme
 
-Update README with current interfac (Pascal Hertleif)
+Update README with current interface (Pascal Hertleif)
 - [[`21c5417580`](https://github.com/rust-cli/human-panic/commits/21c5417580e6bf4cbe330715b5cc4ae39e4f5d8e)] Update README with current interface (Florian Gilcher)
 - [[`d86232967d`](https://github.com/rust-cli/human-panic/commits/d86232967d3bf9dc868a4cd68bab2e1004b6d2dc)] Merge pull request #10 from killercup/rollup
 
