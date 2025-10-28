@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [2.0.4] - 2025-10-28
+
 ## [2.0.3] - 2025-07-08
 
 ### Internal
@@ -239,7 +241,8 @@ and choose a nightly that actually exists.
 ```
 
 <!-- next-url -->
-[Unreleased]: https://github.com/rust-cli/human-panic/compare/v2.0.3...HEAD
+[Unreleased]: https://github.com/rust-cli/human-panic/compare/v2.0.4...HEAD
+[2.0.4]: https://github.com/rust-cli/human-panic/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/rust-cli/human-panic/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/rust-cli/human-panic/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/rust-cli/human-panic/compare/v2.0.0...v2.0.1
