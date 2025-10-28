@@ -40,7 +40,6 @@
 //!
 //! Thank you kindly!
 
-#![cfg_attr(feature = "nightly", feature(panic_info_message))]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(clippy::print_stderr)]
 #![warn(clippy::print_stdout)]
@@ -277,10 +276,6 @@ fn write_msg<P: AsRef<Path>>(
 pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo<'_>) -> Option<PathBuf> {
     let mut expl = String::new();
 
-    #[cfg(feature = "nightly")]
-    let message = panic_info.message().map(|m| format!("{}", m));
-
-    #[cfg(not(feature = "nightly"))]
     let message = match (
         panic_info.payload().downcast_ref::<&str>(),
         panic_info.payload().downcast_ref::<String>(),
