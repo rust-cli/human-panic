@@ -61,11 +61,11 @@ use std::path::{Path, PathBuf};
 ///
 /// See [`metadata!`]
 pub struct Metadata {
-    name: Cow<'static, str>,
-    version: Cow<'static, str>,
-    authors: Option<Cow<'static, str>>,
-    homepage: Option<Cow<'static, str>>,
-    support: Option<Cow<'static, str>>,
+    pub name: Cow<'static, str>,
+    pub version: Cow<'static, str>,
+    pub authors: Option<Cow<'static, str>>,
+    pub homepage: Option<Cow<'static, str>>,
+    pub support: Option<Cow<'static, str>>,
 }
 
 impl Metadata {
@@ -143,16 +143,22 @@ macro_rules! metadata {
 #[macro_export]
 macro_rules! setup_panic {
     ($meta:expr) => {{
-        $crate::setup_panic(|| $meta);
+        $crate::setup_panic(|| $meta, None);
+    }};
+
+    ($meta:expr, $print_fn:expr) => {{
+        $crate::setup_panic(|| $meta, Some($print_fn));
     }};
 
     () => {
-        $crate::setup_panic!($crate::metadata!());
+        $crate::setup_panic(|| $crate::metadata!(), None);
     };
 }
 
+pub type WriteFunc = fn (&mut dyn std::io::Write, Option<&Path>, &Metadata) -> IoResult<()>;
+
 #[doc(hidden)]
-pub fn setup_panic(meta: impl Fn() -> Metadata) {
+pub fn setup_panic(meta: impl Fn() -> Metadata, write_func: Option<WriteFunc>) {
     #![allow(deprecated)]
 
     #[allow(unused_imports)]
@@ -165,7 +171,8 @@ pub fn setup_panic(meta: impl Fn() -> Metadata) {
 
             panic::set_hook(Box::new(move |info: &PanicInfo<'_>| {
                 let file_path = handle_dump(&meta, info);
-                print_msg(file_path, &meta)
+                let write_func = write_func.unwrap_or(|mut buf,fp,meta| write_msg(&mut buf,fp,meta));
+                print_msg(file_path, &meta, write_func)
                     .expect("human-panic: printing error message to console failed");
             }));
         }
@@ -197,25 +204,27 @@ impl Default for PanicStyle {
 
 /// Utility function that prints a message to our human users
 #[cfg(feature = "color")]
-pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata, write_func: WriteFunc) -> IoResult<()> {
     use std::io::Write as _;
 
     let stderr = anstream::stderr();
     let mut stderr = stderr.lock();
 
     write!(stderr, "{}", anstyle::AnsiColor::Red.render_fg())?;
-    write_msg(&mut stderr, file_path, meta)?;
+    let fp = file_path.as_ref().map(|fp| fp.as_ref());
+    write_func(&mut stderr, fp, meta)?;
     write!(stderr, "{}", anstyle::Reset.render())?;
 
     Ok(())
 }
 
 #[cfg(not(feature = "color"))]
-pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata) -> IoResult<()> {
+pub fn print_msg<P: AsRef<Path>>(file_path: Option<P>, meta: &Metadata, write_func: WriteFunc) -> IoResult<()> {
     let stderr = std::io::stderr();
     let mut stderr = stderr.lock();
 
-    write_msg(&mut stderr, file_path, meta)?;
+    let fp = file_path.as_ref().map(|fp| fp.as_ref());
+    write_func(&mut stderr, fp, meta)?;
 
     Ok(())
 }
