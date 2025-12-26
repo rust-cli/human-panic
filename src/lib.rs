@@ -64,6 +64,7 @@ pub struct Metadata {
     version: Cow<'static, str>,
     authors: Option<Cow<'static, str>>,
     homepage: Option<Cow<'static, str>>,
+    repository: Option<Cow<'static, str>>,
     support: Option<Cow<'static, str>>,
 }
 
@@ -75,6 +76,7 @@ impl Metadata {
             version: version.into(),
             authors: None,
             homepage: None,
+            repository: None,
             support: None,
         }
     }
@@ -97,6 +99,15 @@ impl Metadata {
         self
     }
 
+    /// The URL of the crate's repository
+    pub fn repository(mut self, value: impl Into<Cow<'static, str>>) -> Self {
+        let value = value.into();
+        if !value.is_empty() {
+            self.repository = value.into();
+        }
+        self
+    }
+
     /// The support information
     pub fn support(mut self, value: impl Into<Cow<'static, str>>) -> Self {
         let value = value.into();
@@ -114,6 +125,7 @@ macro_rules! metadata {
         $crate::Metadata::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
             .authors(env!("CARGO_PKG_AUTHORS").replace(":", ", "))
             .homepage(env!("CARGO_PKG_HOMEPAGE"))
+            .repository(env!("CARGO_PKG_REPOSITORY"))
     }};
 }
 
@@ -228,6 +240,7 @@ fn write_msg<P: AsRef<Path>>(
         name,
         authors,
         homepage,
+        repository,
         support,
         ..
     } = meta;
@@ -252,6 +265,8 @@ fn write_msg<P: AsRef<Path>>(
 
     if let Some(homepage) = homepage {
         writeln!(buffer, "- Homepage: {homepage}")?;
+    } else if let Some(repository) = repository {
+        writeln!(buffer, "- Repository: {repository}")?;
     }
     if let Some(authors) = authors {
         writeln!(buffer, "- Authors: {authors}")?;
