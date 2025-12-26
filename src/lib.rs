@@ -53,8 +53,7 @@ use report::{Method, Report};
 
 use std::borrow::Cow;
 use std::io::Result as IoResult;
-#[allow(deprecated)]
-use std::panic::PanicInfo;
+use std::panic::PanicHookInfo;
 use std::path::{Path, PathBuf};
 
 /// A convenient metadata struct that describes a crate
@@ -163,7 +162,7 @@ pub fn setup_panic(meta: impl Fn() -> Metadata) {
         PanicStyle::Human => {
             let meta = meta();
 
-            panic::set_hook(Box::new(move |info: &PanicInfo<'_>| {
+            panic::set_hook(Box::new(move |info: &PanicHookInfo<'_>| {
                 let file_path = handle_dump(&meta, info);
                 print_msg(file_path, &meta)
                     .expect("human-panic: printing error message to console failed");
@@ -273,7 +272,7 @@ fn write_msg<P: AsRef<Path>>(
 
 /// Utility function which will handle dumping information to disk
 #[allow(deprecated)]
-pub fn handle_dump(meta: &Metadata, panic_info: &PanicInfo<'_>) -> Option<PathBuf> {
+pub fn handle_dump(meta: &Metadata, panic_info: &PanicHookInfo<'_>) -> Option<PathBuf> {
     let mut expl = String::new();
 
     let message = match (
