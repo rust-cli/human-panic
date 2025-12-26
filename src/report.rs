@@ -43,7 +43,10 @@ impl Report {
         explanation: String,
         cause: String,
     ) -> Self {
-        let operating_system = os_info::get().to_string();
+        let cpu_arch = sysinfo::System::cpu_arch();
+        let operating_system =
+            sysinfo::System::long_os_version().unwrap_or_else(|| "unknown".to_owned());
+        let operating_system = format!("{operating_system} [{cpu_arch}]");
         let backtrace = render_backtrace();
 
         Self {
