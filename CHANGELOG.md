@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [2.0.5] - 2025-12-26
+
 ### Performance
 
 - Improve build times on some platforms by changing from `os_info` to `sysinfo`
@@ -245,7 +247,8 @@ and choose a nightly that actually exists.
 ```
 
 <!-- next-url -->
-[Unreleased]: https://github.com/rust-cli/human-panic/compare/v2.0.4...HEAD
+[Unreleased]: https://github.com/rust-cli/human-panic/compare/v2.0.5...HEAD
+[2.0.5]: https://github.com/rust-cli/human-panic/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/rust-cli/human-panic/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/rust-cli/human-panic/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/rust-cli/human-panic/compare/v2.0.1...v2.0.2
