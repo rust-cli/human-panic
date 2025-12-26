@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Performance
+
+- Improve build times on some platforms by changing from `os_info` to `sysinfo`
+
 ## [2.0.4] - 2025-10-28
 
 ## [2.0.3] - 2025-07-08
