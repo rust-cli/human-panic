@@ -57,7 +57,10 @@ jobs:
       run: cargo test --workspace --release
   msrv:
     name: "Check MSRV"
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
@@ -71,7 +74,10 @@ jobs:
       run: cargo hack check --each-feature --locked --rust-version --ignore-private --workspace --all-targets --keep-going --exclude-features nightly
   minimal-versions:
     name: Minimal versions
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: ["ubuntu-latest"]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v6
