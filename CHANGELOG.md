@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Features
+
+- Added `Metadata::repository` as a fallback for `Metadata::homepage`
+
 ## [2.0.5] - 2025-12-26
 
 ### Performance
