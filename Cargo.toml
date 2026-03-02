@@ -129,7 +129,7 @@ serde_derive = "1.0.228"
 toml = { version = "0.9.10", default-features = false, features = ["display", "serde"] }
 serde = "1.0.228"
 backtrace = "0.3.76"
-sysinfo = { version = "0.37.2", default-features = false, features = ["system"] }
+sysinfo = { version = "0.38.0", default-features = false, features = ["system"] }
 
 [lints]
 workspace = true
