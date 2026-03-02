@@ -3,7 +3,7 @@ members = [
   "tests/single-panic",
   "tests/custom-panic",
 ]
-resolver = "2"
+resolver = "3"
 
 [workspace.package]
 repository = "https://github.com/rust-cli/human-panic"
