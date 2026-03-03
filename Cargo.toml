@@ -123,13 +123,13 @@ unstable-doc = ["default"]
 
 [dependencies]
 anstyle = { version = "1.0.13", optional = true }
-anstream = { version = "0.6.21", optional = true }
-uuid = { version = "1.19.0", features = ["v4"], default-features = false }
+anstream = { version = "1.0.0", optional = true }
+uuid = { version = "1.21.0", features = ["v4"], default-features = false }
 serde_derive = "1.0.228"
-toml = { version = "0.9.10", default-features = false, features = ["display", "serde"] }
+toml = { version = "1.0.3", default-features = false, features = ["display", "serde"] }
 serde = "1.0.228"
 backtrace = "0.3.76"
-sysinfo = { version = "0.38.0", default-features = false, features = ["system"] }
+sysinfo = { version = "0.38.3", default-features = false, features = ["system"] }
 
 [lints]
 workspace = true
