@@ -33,7 +33,7 @@ unused_macro_rules = "warn"
 unused_qualifications = "warn"
 
 [workspace.lints.clippy]
-allow_attributes_without_reason = "warn"
+#allow_attributes_without_reason = "warn"
 bool_assert_comparison = "allow"
 branches_sharing_code = "allow"
 byte_char_slices = "allow"  # sometimes explicit arrays are better
