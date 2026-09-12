@@ -58,11 +58,11 @@ pub enum PanicStyle {
 impl Default for PanicStyle {
     fn default() -> Self {
         if cfg!(debug_assertions) {
-            PanicStyle::Debug
+            Self::Debug
         } else {
             match ::std::env::var("RUST_BACKTRACE") {
-                Ok(_) => PanicStyle::Debug,
-                Err(_) => PanicStyle::Human,
+                Ok(_) => Self::Debug,
+                Err(_) => Self::Human,
             }
         }
     }
