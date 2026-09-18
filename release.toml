@@ -1,2 +1,2 @@
 owners = ["github:rust-cli:Maintainers"]
-allow-branch = ["master"]
+allow-branch = ["main"]
