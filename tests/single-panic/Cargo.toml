@@ -13,3 +13,6 @@ human-panic = { path = "../.." }
 
 [dev-dependencies]
 snapbox = { version = "1.0.1", features = ["cmd", "dir"] }
+
+[lints]
+workspace = true
